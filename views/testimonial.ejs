@@ -1,0 +1,47 @@
+<%- include('partials/header') %>
+
+    <!-- Page Header Start -->
+    <div class="container-fluid page-header py-5 mb-5">
+        <div class="container py-5">
+            <h1 class="display-3 text-white mb-3 animated slideInDown">Testimonial</h1>
+            <nav aria-label="breadcrumb animated slideInDown">
+                <ol class="breadcrumb">
+                    <li class="breadcrumb-item"><a class="text-white" href="/">Home</a></li>
+                    <li class="breadcrumb-item text-white active" aria-current="page">Testimonial</li>
+                </ol>
+            </nav>
+        </div>
+    </div>
+    <!-- Page Header End -->
+
+    <!-- Testimonial Start -->
+    <div class="container-xxl py-5 wow fadeInUp" data-wow-delay="0.1s">
+        <div class="container">
+            <div class="text-center">
+                <h6 class="section-title bg-white text-center text-primary px-3">Testimonial</h6>
+                <h1 class="mb-5">Our Students Say!</h1>
+            </div>
+            <div class="owl-carousel testimonial-carousel position-relative">
+                <% [
+                    { img:'testimonial-1.jpg', name:'Emily Clark',    role:'UI Designer',       text:'This platform transformed my career. The courses are engaging and the instructors are world-class. I got my first freelance client within a month of completing the design course!' },
+                    { img:'testimonial-2.jpg', name:'Michael Lee',    role:'Software Developer', text:'I completed three courses here and landed my dream job. The content is practical, up-to-date, and the community support is amazing. Worth every penny.' },
+                    { img:'testimonial-3.jpg', name:'Sarah Johnson',  role:'Digital Marketer',  text:'Excellent learning experience! The hands-on projects really help solidify the concepts. I went from zero to running my own digital marketing agency.' },
+                    { img:'testimonial-4.jpg', name:'David Kim',      role:'Entrepreneur',       text:'The online library alone is worth the subscription. Top-quality content, amazing instructors, and a very supportive learning community.' },
+                    { img:'testimonial-1.jpg', name:'Priya Mehta',    role:'Graphic Designer',  text:'I had no design background whatsoever. After just two courses I was able to create professional-level graphics. The instructors explain everything so clearly!' },
+                    { img:'testimonial-2.jpg', name:'Carlos Rivera',  role:'Video Editor',       text:'Best investment I ever made in my education. The video editing course is incredibly detailed and the feedback from instructors is always constructive and fast.' },
+                ].forEach(function(t) { %>
+                <div class="testimonial-item text-center">
+                    <img class="border rounded-circle p-2 mx-auto mb-3" src="/img/<%= t.img %>" style="width:80px;height:80px;" alt="<%= t.name %>">
+                    <h5 class="mb-0"><%= t.name %></h5>
+                    <p><%= t.role %></p>
+                    <div class="testimonial-text bg-light text-center p-4">
+                        <p class="mb-0"><%= t.text %></p>
+                    </div>
+                </div>
+                <% }); %>
+            </div>
+        </div>
+    </div>
+    <!-- Testimonial End -->
+
+<%- include('partials/footer') %>

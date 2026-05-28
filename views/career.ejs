@@ -1,0 +1,346 @@
+<%- include('partials/header') %>
+
+    <%- include('partials/banner', { bannerTitle: 'Careers' }) %>
+
+        <div class="container">
+            <!--STYLE SHEET-->
+            <style>
+                .career-wrapper {
+                    padding: 60px 15px;
+
+                }
+
+                .career-container {
+                    max-width: 1100px;
+                    margin: auto;
+                    /*font-family: system-ui, sans-serif;*/
+
+                }
+
+                .career-header {
+                    text-align: center;
+                    margin-bottom: 40px;
+                }
+
+                .career-header span {
+                    color: #d32f2f;
+                }
+
+                .career-card {
+                    background: #fff;
+                    padding: 28px;
+                    border-radius: 14px;
+                    margin-bottom: 30px;
+                    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.05);
+                }
+
+                .section-title {
+                    font-size: 1.05rem;
+
+                    margin-bottom: 20px;
+                }
+
+                .form-grid {
+                    display: grid;
+                    grid-template-columns: repeat(2, 1fr);
+                    gap: 20px 24px;
+                }
+
+                .form-group {
+                    display: flex;
+                    flex-direction: column;
+                }
+
+                .form-group label {
+                    font-size: 0.85rem;
+                    font-weight: 500;
+                    margin-bottom: 6px;
+                }
+
+                .form-group label span {
+                    color: #d32f2f;
+                }
+
+                .form-group input,
+                .form-group select {
+                    height: 44px;
+                    padding: 10px 12px;
+                    border-radius: 8px;
+                    border: 1px solid #dcdcdc;
+                    font-size: 0.9rem;
+                }
+
+                .form-group input:focus,
+                .form-group select:focus {
+                    outline: none;
+                    border-color: #0d6efd;
+                }
+
+                .submit-wrap {
+                    text-align: center;
+                    margin-top: 30px;
+                }
+
+                button {
+                    background: #0d6efd;
+                    color: #fff;
+                    border: none;
+                    padding: 12px 44px;
+                    border-radius: 30px;
+                    font-size: 0.95rem;
+                    cursor: pointer;
+                }
+
+                button:hover {
+                    background: #084298;
+                }
+
+                @media (max-width: 768px) {
+                    .form-grid {
+                        grid-template-columns: 1fr;
+                    }
+                }
+            </style>
+
+            <!--HTML STRUCTURE-->
+
+            <section class="career-wrapper">
+                <div class="career-container">
+
+                    <header class="career-header">
+                        <h2>Career Application Form</h2>
+                        <p>Fields marked with <span>*</span> are mandatory</p>
+                    </header>
+
+                    <form id="careerForm" enctype="multipart/form-data">
+
+                        <!-- PERSONAL INFORMATION -->
+                        <div class="career-card">
+                            <h3 class="section-title">Personal Information</h3>
+
+                            <div class="form-grid">
+                                <div class="form-group">
+                                    <label>Applicant Name <span>*</span></label>
+                                    <input type="text" id="applicant_name" name="applicant_name" required="">
+                                </div>
+
+                                <div class="form-group">
+                                    <label>Father Name <span>*</span></label>
+                                    <input type="text" id="father_name" name="father_name" required="">
+                                </div>
+
+                                <div class="form-group">
+                                    <label>Contact Number <span>*</span></label>
+                                    <input type="tel" id="contact" name="contact_number" maxlength="10"
+                                        inputmode="numeric">
+                                </div>
+
+                                <div class="form-group">
+                                    <label>Email</label>
+                                    <input type="email" id="email" name="email">
+                                </div>
+
+                                <div class="form-group">
+                                    <label>Gender <span>*</span></label>
+                                    <select id="gender" required="" name="gender">
+                                        <option value="">Select</option>
+                                        <option value="male">Male</option>
+                                        <option value="Female">Female</option>
+                                        <option value="Transgender">Transgender</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- ADDRESS -->
+                        <div class="career-card">
+                            <h3 class="section-title">Address Details</h3>
+
+                            <div class="form-grid">
+                                <div class="form-group">
+                                    <label>Address</label>
+                                    <input id="address" type="text" name="address">
+                                </div>
+
+                                <div class="form-group">
+                                    <label>Current City</label>
+                                    <input id="current_city" type="text" name="current_city">
+                                </div>
+
+                                <div class="form-group">
+                                    <label>Current State</label>
+                                    <input id="current_state" type="text" name="current_state">
+                                </div>
+
+                                <div class="form-group">
+                                    <label>Home City</label>
+                                    <input id="home_city" type="text" name="home_city">
+                                </div>
+
+                                <div class="form-group">
+                                    <label>Home State</label>
+                                    <input id="home_state" type="text" name="home_state">
+                                </div>
+
+                                <div class="form-group">
+                                    <label>Country</label>
+                                    <input id="country" type="text" name="country">
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- EMPLOYMENT -->
+                        <div class="career-card">
+                            <h3 class="section-title">Employment Details</h3>
+
+                            <div class="form-grid">
+                                <div class="form-group">
+                                    <label>Department <span>*</span></label>
+                                    <select id="department" required="" name="department">
+                                        <option value="" disabled="" selected="">Select</option>
+                                        <option value="Teaching">Teaching</option>
+                                        <option value="Non-Teaching">Non-Teaching</option>
+                                    </select>
+                                </div>
+
+                                <div class="form-group">
+                                    <label>Post Applied For</label>
+                                    <input id="post" type="text" name="post_applied">
+                                </div>
+
+                                <div class="form-group">
+                                    <label>Previous Employer</label>
+                                    <input id="prev_employer" type="text" name="previous_employer">
+                                </div>
+
+                                <div class="form-group">
+                                    <label>Designation</label>
+                                    <input id="designation" type="text" name="designation">
+                                </div>
+
+                                <div class="form-group">
+                                    <label>Current Employer</label>
+                                    <input id="current_employer" type="text" name="current_employer">
+                                </div>
+
+                                <div class="form-group">
+                                    <label>Notice Period</label>
+                                    <input id="notice" type="text" name="notice_period">
+                                </div>
+
+                                <div class="form-group">
+                                    <label>Key Skills</label>
+                                    <input id="skills" name="key_skills" type="text">
+                                </div>
+
+                                <div class="form-group">
+                                    <label>Qualifications <span>*</span></label>
+                                    <input id="qualification" type="text" name="qualification" required="">
+                                </div>
+
+                                <div class="form-group">
+                                    <label>Total Experience</label>
+                                    <input id="experience" name="total_experience" type="text">
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- SALARY -->
+                        <div class="career-card">
+                            <h3 class="section-title">Salary Details</h3>
+
+                            <div class="form-grid">
+                                <div class="form-group">
+                                    <label>Current CTC</label>
+                                    <input id="current_ctc" type="text" name="current_ctc">
+                                </div>
+
+                                <div class="form-group">
+                                    <label>Expected CTC</label>
+                                    <input id="expected_ctc" type="text" name="expected_ctc">
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- CV -->
+                        <div class="career-card">
+                            <h3 class="section-title">Reference &amp; CV</h3>
+
+                            <div class="form-grid">
+                                <div class="form-group">
+                                    <label>Reference</label>
+                                    <input id="reference" name="source_of_information">
+                                </div>
+
+                                <div class="form-group">
+                                    <label>Upload CV <span>*</span></label>
+                                    <input type="file" id="cv" name="cv" accept=".pdf" required="">
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="submit-wrap">
+                            <button type="submit">Apply Now</button>
+                        </div>
+
+                    </form>
+                </div>
+            </section>
+
+            <!--API JS SCRIPT -->
+
+            <script>
+                document.getElementById("careerForm").addEventListener("submit", async function (e) {
+                    e.preventDefault();
+
+                    const form = e.target;
+                    const submitBtn = form.querySelector("button[type='submit']");
+                    submitBtn.disabled = true;
+                    submitBtn.textContent = "Submitting...";
+
+                    // Create FormData from form
+                    const formData = new FormData(form);
+
+                    // Append API key
+                    formData.append(
+                        "api_key",
+                        "school@3534dfjh3245dfgjhgdfjgh!dfgjhk89452kdskjg"
+                    );
+
+                    try {
+                        const response = await fetch(
+                            "https://eflow.kualakubsgurugram.in/API/tp/careers",
+                            {
+                                method: "POST",
+                                body: formData
+                            }
+                        );
+
+                        let result = null;
+                        try {
+                            result = await response.json();
+                        } catch (err) {
+                            console.warn("Response body could not be read (possible CORS).");
+                        }
+
+                        if (response.ok) {
+                            alert("Your application has been submitted successfully.");
+                            form.reset();
+                        } else {
+                            alert("Submission failed. Please try again.");
+                            console.error("Server error:", result);
+                        }
+
+                    } catch (error) {
+                        console.error("Network / CORS error:", error);
+                        alert("Unable to submit form. Please try later.");
+                    } finally {
+                        submitBtn.disabled = false;
+                        submitBtn.textContent = "Apply Now";
+                    }
+                });
+            </script>
+
+        </div>
+
+<%- include('partials/footer') %>

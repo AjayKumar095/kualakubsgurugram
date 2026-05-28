@@ -1,0 +1,63 @@
+<%- include('partials/header') %>
+
+    <!-- Page Header Start -->
+    <div class="container-fluid page-header py-5 mb-5">
+        <div class="container py-5">
+            <h1 class="display-3 text-white mb-3 animated slideInDown">Courses</h1>
+            <nav aria-label="breadcrumb animated slideInDown">
+                <ol class="breadcrumb">
+                    <li class="breadcrumb-item"><a class="text-white" href="/">Home</a></li>
+                    <li class="breadcrumb-item text-white active" aria-current="page">Courses</li>
+                </ol>
+            </nav>
+        </div>
+    </div>
+    <!-- Page Header End -->
+
+    <!-- Courses Start -->
+    <div class="container-xxl py-5">
+        <div class="container">
+            <div class="text-center wow fadeInUp" data-wow-delay="0.1s">
+                <h6 class="section-title bg-white text-center text-primary px-3">Courses</h6>
+                <h1 class="mb-5">All Our Courses</h1>
+            </div>
+            <div class="row g-4 justify-content-center">
+                <% [
+                    { img:'course-1.jpg', price:'$149.00', stars:5, reviews:123, title:'Web Design & Development Course for Beginners',      instructor:'John Doe',   duration:'1.49 Hrs', students:30  },
+                    { img:'course-2.jpg', price:'$199.00', stars:5, reviews:98,  title:'Graphic Design Masterclass — From Zero to Hero',     instructor:'Jane Smith', duration:'3.20 Hrs', students:54  },
+                    { img:'course-3.jpg', price:'$99.00',  stars:5, reviews:75,  title:'Digital Marketing Strategy & SEO Complete Guide',    instructor:'Alex Ray',   duration:'2.10 Hrs', students:42  },
+                    { img:'course-1.jpg', price:'$129.00', stars:4, reviews:61,  title:'Video Editing with Premiere Pro — Complete Course',  instructor:'Maria Chen', duration:'4.00 Hrs', students:67  },
+                    { img:'course-2.jpg', price:'$79.00',  stars:5, reviews:88,  title:'Python for Beginners — Learn Coding from Scratch',   instructor:'John Doe',   duration:'5.30 Hrs', students:112 },
+                    { img:'course-3.jpg', price:'$109.00', stars:5, reviews:44,  title:'UI/UX Design: Build Beautiful Interfaces with Figma', instructor:'Jane Smith', duration:'3.45 Hrs', students:35  },
+                ].forEach(function(c) { %>
+                <div class="col-lg-4 col-md-6 wow fadeInUp">
+                    <div class="course-item bg-light">
+                        <div class="position-relative overflow-hidden">
+                            <img class="img-fluid" src="/img/<%= c.img %>" alt="<%= c.title %>">
+                            <div class="w-100 d-flex justify-content-center position-absolute bottom-0 start-0 mb-4">
+                                <a href="#" class="flex-shrink-0 btn btn-sm btn-primary px-3 border-end" style="border-radius:30px 0 0 30px;">Read More</a>
+                                <a href="#" class="flex-shrink-0 btn btn-sm btn-primary px-3" style="border-radius:0 30px 30px 0;">Join Now</a>
+                            </div>
+                        </div>
+                        <div class="text-center p-4 pb-0">
+                            <h3 class="mb-0"><%= c.price %></h3>
+                            <div class="mb-3">
+                                <% for(var i=0;i<c.stars;i++) { %><small class="fa fa-star text-primary"></small><% } %>
+                                <small>(<%= c.reviews %>)</small>
+                            </div>
+                            <h5 class="mb-4"><%= c.title %></h5>
+                        </div>
+                        <div class="d-flex border-top">
+                            <small class="flex-fill text-center border-end py-2"><i class="fa fa-user-tie text-primary me-2"></i><%= c.instructor %></small>
+                            <small class="flex-fill text-center border-end py-2"><i class="fa fa-clock text-primary me-2"></i><%= c.duration %></small>
+                            <small class="flex-fill text-center py-2"><i class="fa fa-user text-primary me-2"></i><%= c.students %> Students</small>
+                        </div>
+                    </div>
+                </div>
+                <% }); %>
+            </div>
+        </div>
+    </div>
+    <!-- Courses End -->
+
+<%- include('partials/footer') %>
