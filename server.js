@@ -97,6 +97,14 @@ const renderGallery = (req, res) => {
   res.render('gallery', { ...siteData, currentPath: req.path, pageTitle: 'gallery' });
 };
 
+const renderprivacyPolicy = (req, res) => {
+  res.render('privacyPolicy', { ...siteData, currentPath: req.path, pageTitle: 'Privacy & Policy' });
+};
+
+const rendertermsConditions = (req, res) => {
+  res.render('termsConditions', { ...siteData, currentPath: req.path, pageTitle: 'Terms & Conditions' });
+};
+
 // ─── Routes ─────────────────────────────────────────────────────────────────
 app.get(['/', '/index.html'], renderHome);
 app.get(['/about', '/about.html'], renderAbout);
@@ -110,6 +118,8 @@ app.get(['/admission-procedure', '/admissionProcedure.html'], renderadmissionPro
 app.get(['/documents-required', '/documentsRequired.html'], renderdocumentsRequired);
 app.get(['/career', '/career.html'], renderCareer);
 app.get(['/gallery', '/gallery.html'], renderGallery);
+app.get(['/privacy-policy', '/privacyPolicy.html'], renderprivacyPolicy);
+app.get(['/terms-conditions', '/termsConditions.html'], rendertermsConditions);
 
 // 404 catch-all
 app.use((req, res) => {
