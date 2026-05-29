@@ -5,9 +5,81 @@
 
 const express = require('express');
 const path = require('path');
+const session = require('express-session');
+const multer = require('multer'); 
 
 const app = express();
 const PORT = process.env.PORT || 3000;
+
+
+// ─── Imports ────────────────────────────────────────────────────────────────
+const galleryManager = require('./lib/gallery-manager');
+const { isAuthenticated, isNotAuthenticated } = require('./middleware/auth-middleware');
+
+// ─── Configuration ──────────────────────────────────────────────────────────
+const ADMIN_PASSWORD = process.env.ADMIN_PASSWORD || 'admin123'; // Change in production!
+
+// Configure multer for file uploads
+const storage = multer.diskStorage({
+  destination: (req, file, cb) => {
+    cb(null, path.join(__dirname, 'assests/uploads/images'));
+  },
+  filename: (req, file, cb) => {
+    const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1E9);
+    cb(null, file.fieldname + '-' + uniqueSuffix + path.extname(file.originalname));
+  }
+});
+
+const uploadThumbnail = multer.diskStorage({
+  destination: (req, file, cb) => {
+    cb(null, path.join(__dirname, 'assests/uploads/thumbnails'));
+  },
+  filename: (req, file, cb) => {
+    const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1E9);
+    cb(null, file.fieldname + '-' + uniqueSuffix + path.extname(file.originalname));
+  }
+});
+
+const upload = multer({
+  storage,
+  fileFilter: (req, file, cb) => {
+    const allowed = /jpeg|jpg|png|gif|webp/;
+    const ext = path.extname(file.originalname).toLowerCase();
+    if (allowed.test(ext)) {
+      cb(null, true);
+    } else {
+      cb(new Error('Invalid file type. Only images allowed.'));
+    }
+  },
+  limits: { fileSize: 10 * 1024 * 1024 } // 10MB max
+});
+
+const uploadThumb = multer({
+  storage: uploadThumbnail,
+  fileFilter: (req, file, cb) => {
+    const allowed = /jpeg|jpg|png|gif|webp/;
+    const ext = path.extname(file.originalname).toLowerCase();
+    if (allowed.test(ext)) {
+      cb(null, true);
+    } else {
+      cb(new Error('Invalid file type. Only images allowed.'));
+    }
+  },
+  limits: { fileSize: 5 * 1024 * 1024 } // 5MB max
+});
+
+// ─── Session Middleware ─────────────────────────────────────────────────────
+app.use(session({
+  secret: 'gallery-admin-secret-key',
+  resave: false,
+  saveUninitialized: false,
+  cookie: { secure: false, maxAge: 24 * 60 * 60 * 1000 } // 24 hours
+}));
+
+// ─── Body Parser Middleware ─────────────────────────────────────────────────
+app.use(express.urlencoded({ extended: true }));
+app.use(express.json());
+
 
 // ─── View Engine ────────────────────────────────────────────────────────────
 app.set('view engine', 'ejs');
@@ -17,7 +89,7 @@ app.set('views', path.join(__dirname, 'views'));
 // We no longer use 301 redirects for .html files.
 // Instead, both clean and .html URLs are routed directly to View Functions.
 
-// ─── Static Assets ──────────────────────────────────────────────────────────
+// ─── Static assests ──────────────────────────────────────────────────────────
 // index:false prevents Express auto-serving index.html at /
 // (our EJS route for '/' handles that instead).
 app.use(express.static(path.join(__dirname), { index: false }));
@@ -105,6 +177,149 @@ const rendertermsConditions = (req, res) => {
   res.render('termsConditions', { ...siteData, currentPath: req.path, pageTitle: 'Terms & Conditions' });
 };
 
+
+// ─── Admin Routes ───────────────────────────────────────────────────────────
+
+const renderAdminLogin = (req, res) => {
+  res.render('admin-login', {...siteData, currentPath: req.path,  error: null });
+};
+
+const handleAdminLogin = (req, res) => {
+  const { password } = req.body;
+  
+  if (!password) {
+    return res.render('admin-login', { error: 'Password is required' });
+  }
+
+  if (password === ADMIN_PASSWORD) {
+    req.session.adminAuthenticated = true;
+    res.redirect('/admin');
+  } else {
+    res.render('admin-login', { error: 'Invalid password' });
+  }
+};
+
+const handleAdminLogout = (req, res) => {
+  req.session.destroy((err) => {
+    if (err) console.error('Session destroy error:', err);
+    res.redirect('/admin/login');
+  });
+};
+
+const renderAdminDashboard = (req, res) => {
+  const galleries = galleryManager.getAllGalleries();
+  res.render('admin-dashboard', { galleries, currentPath: req.path, error: null, success: null });
+};
+// const renderAdminDashboard = (req, res) => {
+//   const galleries = galleryManager.getAllGalleries();
+
+//   res.render('admin-dashboard', {
+//     ...siteData,
+//     galleries,
+//     currentPath: req.path,
+//     pageTitle: 'Admin Dashboard',
+//     error: null,
+//     success: null
+//   });
+// };
+const handleCreateGallery = (req, res) => {
+  try {
+    const { title, slug, description } = req.body;
+    
+    if (!title || !slug) {
+      return res.render('admin-dashboard', {
+        galleries: galleryManager.getAllGalleries(),
+        currentPath: req.path,
+        error: 'Title and slug are required',
+        success: null
+      });
+    }
+
+    const thumbnailPath = req.file ? `/assests/uploads/thumbnails/${req.file.filename}` : 'img/KUALAKUBS-LOGO-1.png';
+    
+    galleryManager.createGallery(title, slug, thumbnailPath, description);
+    
+    res.render('admin-dashboard', {
+      galleries: galleryManager.getAllGalleries(),
+      currentPath: req.path,
+      error: null,
+      success: 'Gallery folder created successfully!'
+    });
+  } catch (err) {
+    res.render('admin-dashboard', {
+      galleries: galleryManager.getAllGalleries(),
+      currentPath: req.path,
+      error: err.message,
+      success: null
+    });
+  }
+};
+
+const handleUploadImages = (req, res) => {
+  try {
+    const { gallerySlug, imageDetails } = req.body;
+
+    if (!gallerySlug) {
+      return res.render('admin-dashboard', {
+        galleries: galleryManager.getAllGalleries(),
+        currentPath: req.path,
+        error: 'Gallery folder not selected',
+        success: null
+      });
+    }
+
+    if (!req.files || req.files.length === 0) {
+      return res.render('admin-dashboard', {
+        galleries: galleryManager.getAllGalleries(),
+        currentPath: req.path,
+        error: 'No images selected',
+        success: null
+      });
+    }
+
+    const imageArray = req.files.map((file, idx) => ({
+      filename: file.filename,
+      title: imageDetails && imageDetails[idx] && imageDetails[idx].title ? imageDetails[idx].title : file.originalname,
+      slug: imageDetails && imageDetails[idx] && imageDetails[idx].slug ? imageDetails[idx].slug : `img-${Date.now()}-${idx}`
+    }));
+
+    galleryManager.addImages(gallerySlug, imageArray);
+
+    res.render('admin-dashboard', {
+      galleries: galleryManager.getAllGalleries(),
+      currentPath: req.path,
+      error: null,
+      success: `${req.files.length} image(s) uploaded successfully!`
+    });
+  } catch (err) {
+    res.render('admin-dashboard', {
+      galleries: galleryManager.getAllGalleries(),
+      currentPath: req.path,
+      error: err.message,
+      success: null
+    });
+  }
+};
+
+const renderGalleryCategory = (req, res) => {
+  const { slug } = req.params;
+  const gallery = galleryManager.getGalleryBySlug(slug);
+
+  if (!gallery) {
+    return res.status(404).render('404', { ...siteData, pageTitle: '404 – Gallery Not Found', currentPath: req.path });
+  }
+
+  const images = galleryManager.getImagesByGallerySlug(slug);
+  res.render('gallery-category', {
+    ...siteData,
+    currentPath: req.path,
+    pageTitle: gallery.title,
+    gallery,
+    images
+  });
+};
+
+
 // ─── Routes ─────────────────────────────────────────────────────────────────
 app.get(['/', '/index.html'], renderHome);
 app.get(['/about', '/about.html'], renderAbout);
@@ -120,6 +335,14 @@ app.get(['/career', '/career.html'], renderCareer);
 app.get(['/gallery', '/gallery.html'], renderGallery);
 app.get(['/privacy-policy', '/privacyPolicy.html'], renderprivacyPolicy);
 app.get(['/terms-conditions', '/termsConditions.html'], rendertermsConditions);
+
+// ─── Admin Routes ───────────────────────────────────────────────────────────
+app.get('/admin/login', isNotAuthenticated, renderAdminLogin);
+app.post('/admin/login', isNotAuthenticated, handleAdminLogin);
+app.get('/admin', isAuthenticated, renderAdminDashboard);
+app.post('/admin/create-gallery', isAuthenticated, uploadThumb.single('thumbnail'), handleCreateGallery);
+app.post('/admin/upload-images', isAuthenticated, upload.array('images', 50), handleUploadImages);
+app.get('/admin/logout', handleAdminLogout);
 
 // 404 catch-all
 app.use((req, res) => {

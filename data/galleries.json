@@ -22,5 +22,13 @@
     "thumbnail": "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='400' height='300'%3E%3Crect fill='%23F7DC6F' width='400' height='300'/%3E%3Ctext x='50%' y='50%' font-size='48' fill='white' text-anchor='middle' dominant-baseline='middle' font-family='Arial'%3E☀️ Summer%3C/text%3E%3C/svg%3E",
     "description": "Fun outdoor activities and learning during summer camp",
     "createdAt": "2026-05-29T09:57:27.449+05:30"
+  },
+  {
+    "id": "gallery-1780034603962",
+    "title": "test",
+    "slug": "test",
+    "thumbnail": "/assets/img/placeholder.jpg",
+    "description": "",
+    "createdAt": "2026-05-29T06:03:23.989Z"
   }
 ]
