@@ -10,7 +10,12 @@ const multer = require('multer');
 
 
 const app = express();
+
+app.use('/css', express.static(path.join(__dirname, 'css')));
+app.use('/js', express.static(path.join(__dirname, 'js')));
 app.use('/img', express.static(path.join(__dirname, 'img')));
+app.use('/lib', express.static(path.join(__dirname, 'lib')));
+
 const PORT = process.env.PORT || 3000;
 
 
