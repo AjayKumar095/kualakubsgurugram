@@ -1,5 +1,362 @@
 <%- include('partials/header') %>
+<%- include('partials/banner', { bannerTitle: 'Gallery' }) %>
 
-    <%- include('partials/banner', { bannerTitle: 'Gallery' }) %>
+<style>
+    /* ── Gallery Filter Tabs ── */
+    .gallery-filters {
+        display: flex;
+        justify-content: center;
+        flex-wrap: wrap;
+        gap: 10px;
+        margin-bottom: 2.5rem;
+    }
+    .filter-btn {
+        padding: 8px 22px;
+        border-radius: 30px;
+        border: 2px solid #d8cce3;
+        background: #fff;
+        color: #888;
+        font-weight: 700;
+        font-size: 0.875rem;
+        cursor: pointer;
+        transition: all 0.25s;
+        font-family: 'Nunito', 'Heebo', sans-serif;
+    }
+    .filter-btn:hover,
+    .filter-btn.active {
+        background: rgb(61, 6, 75);
+        border-color: rgb(61, 6, 75);
+        color: #fff;
+    }
 
-    <%- include('partials/footer') %>
+    /* ── Gallery Grid ── */
+    .gallery-grid {
+        columns: 4 220px;
+        column-gap: 16px;
+    }
+    .gallery-item {
+        break-inside: avoid;
+        margin-bottom: 16px;
+        border-radius: 14px;
+        overflow: hidden;
+        cursor: pointer;
+        position: relative;
+        box-shadow: 0 4px 15px rgba(0,0,0,0.08);
+        transition: transform 0.3s, box-shadow 0.3s;
+        animation: fadeInUp 0.5s ease both;
+    }
+    .gallery-item:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 12px 35px rgba(61,6,75,0.2);
+    }
+    .gallery-item img {
+        width: 100%;
+        display: block;
+        transition: transform 0.5s ease;
+    }
+    .gallery-item:hover img { transform: scale(1.04); }
+
+    .gallery-item .overlay {
+        position: absolute; inset: 0;
+        background: linear-gradient(to top, rgba(61,6,75,0.7) 0%, transparent 60%);
+        opacity: 0;
+        transition: opacity 0.35s;
+        display: flex; align-items: flex-end;
+        padding: 16px;
+    }
+    .gallery-item:hover .overlay { opacity: 1; }
+    .overlay-icon {
+        color: #fff; font-size: 1.2rem;
+        background: rgba(255,255,255,0.2);
+        width: 38px; height: 38px;
+        border-radius: 50%;
+        display: flex; align-items: center; justify-content: center;
+        margin-left: auto;
+    }
+
+    @keyframes fadeInUp {
+        from { opacity: 0; transform: translateY(20px); }
+        to   { opacity: 1; transform: translateY(0); }
+    }
+
+    /* ── Empty State ── */
+    .empty-gallery {
+        text-align: center;
+        padding: 5rem 2rem;
+        color: #c0a8d0;
+    }
+    .empty-gallery i { font-size: 4rem; margin-bottom: 1.2rem; display: block; }
+    .empty-gallery h4 { color: rgb(61,6,75); font-weight: 800; margin-bottom: 0.5rem; }
+    .empty-gallery p { color: #999; font-size: 0.95rem; }
+
+    /* ── Lightbox ── */
+    .lightbox {
+        display: none;
+        position: fixed; inset: 0;
+        background: rgba(0,0,0,0.92);
+        z-index: 9999;
+        align-items: center; justify-content: center;
+        padding: 1rem;
+        animation: fadeInLb 0.25s ease;
+    }
+    .lightbox.open { display: flex; }
+    @keyframes fadeInLb {
+        from { opacity: 0; }
+        to   { opacity: 1; }
+    }
+    .lb-inner {
+        position: relative;
+        max-width: 90vw;
+        max-height: 90vh;
+        display: flex; align-items: center; justify-content: center;
+    }
+    .lb-inner img {
+        max-width: 100%;
+        max-height: 88vh;
+        border-radius: 16px;
+        box-shadow: 0 20px 60px rgba(0,0,0,0.5);
+        display: block;
+        animation: scaleIn 0.3s cubic-bezier(0.25,1,0.5,1);
+    }
+    @keyframes scaleIn {
+        from { transform: scale(0.85); opacity: 0; }
+        to   { transform: scale(1);    opacity: 1; }
+    }
+    .lb-close {
+        position: fixed; top: 20px; right: 24px;
+        color: #fff; font-size: 1.8rem;
+        cursor: pointer; z-index: 10000;
+        width: 44px; height: 44px;
+        background: rgba(255,255,255,0.1);
+        border-radius: 50%;
+        display: flex; align-items: center; justify-content: center;
+        transition: background 0.2s;
+        border: none;
+    }
+    .lb-close:hover { background: rgba(255,255,255,0.25); }
+    .lb-nav {
+        position: fixed; top: 50%; transform: translateY(-50%);
+        background: rgba(255,255,255,0.12);
+        border: none; color: #fff;
+        width: 46px; height: 46px; border-radius: 50%;
+        font-size: 1.1rem; cursor: pointer;
+        transition: background 0.2s;
+        display: flex; align-items: center; justify-content: center;
+    }
+    .lb-nav:hover { background: rgba(255,255,255,0.25); }
+    .lb-prev { left: 16px; }
+    .lb-next { right: 16px; }
+    .lb-counter {
+        position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%);
+        color: rgba(255,255,255,0.7); font-size: 0.85rem; font-weight: 600;
+    }
+
+    @media (max-width: 576px) {
+        .gallery-grid { columns: 2 140px; }
+        .lb-nav { display: none; }
+    }
+
+    /* ── Pagination Styling ── */
+    .pagination-purple .page-link {
+        color: rgb(61, 6, 75);
+        border-color: #e0d0ee;
+        font-weight: 700;
+        padding: 10px 18px;
+    }
+    .pagination-purple .page-link:hover {
+        background: #f0eaf5;
+        color: rgb(61, 6, 75);
+        border-color: #d0b8e0;
+    }
+    .pagination-purple .page-item.active .page-link {
+        background-color: rgb(61, 6, 75);
+        border-color: rgb(61, 6, 75);
+        color: #fff;
+    }
+    .pagination-purple .page-item.disabled .page-link {
+        color: #ccc;
+        background-color: #fcfbfe;
+        border-color: #e8e2ee;
+    }
+</style>
+
+<!-- Gallery Section -->
+<div class="container py-5">
+
+    <div class="text-center mb-5 wow fadeInUp" data-wow-delay="0.1s">
+        <h6 class="section-title bg-white text-center px-3" style="color: var(--primary);">Our Gallery</h6>
+        <h2 class="display-6 fw-bold" style="color: rgb(61, 6, 75);">Glimpses of Kualakubs</h2>
+        <p class="text-secondary">Capturing joyful moments, creative activities & milestones</p>
+    </div>
+
+    <% if (images && images.length > 0) { %>
+
+    <!-- Filter Buttons -->
+    <div class="gallery-filters wow fadeInUp" data-wow-delay="0.2s">
+        <button class="filter-btn active" onclick="filterGallery('all', this)">
+            All (<%= images.length %>)
+        </button>
+        <button class="filter-btn" onclick="filterGallery('recent', this)">Recent Uploads</button>
+    </div>
+
+    <!-- Masonry Grid -->
+    <div class="gallery-grid" id="galleryGrid">
+        <% images.forEach(function(img, idx) { %>
+        <div class="gallery-item" data-index="<%= idx %>" data-delay="<%= (idx % 12) * 0.05 %>">
+            <img src="<%= img.url %>" alt="Kualakubs gallery image <%= idx + 1 %>" loading="lazy">
+            <div class="overlay">
+                <div class="overlay-icon"><i class="fas fa-search-plus"></i></div>
+            </div>
+        </div>
+        <% }); %>
+    </div>
+
+    <!-- Pagination -->
+    <% if (typeof pagination !== 'undefined' && pagination.totalPages > 1) { %>
+    <nav class="d-flex justify-content-center mt-5 wow fadeInUp" data-wow-delay="0.3s">
+        <ul class="pagination pagination-purple">
+            <% if (pagination.hasPrev) { %>
+            <li class="page-item">
+                <a class="page-link" href="/gallery?page=<%= pagination.currentPage - 1 %>" aria-label="Previous">
+                    <span aria-hidden="true">&laquo;</span>
+                </a>
+            </li>
+            <% } else { %>
+            <li class="page-item disabled">
+                <span class="page-link" aria-label="Previous">&laquo;</span>
+            </li>
+            <% } %>
+            
+            <% for (let i = 1; i <= pagination.totalPages; i++) { %>
+            <li class="page-item <%= pagination.currentPage === i ? 'active' : '' %>">
+                <a class="page-link" href="/gallery?page=<%= i %>"><%= i %></a>
+            </li>
+            <% } %>
+            
+            <% if (pagination.hasNext) { %>
+            <li class="page-item">
+                <a class="page-link" href="/gallery?page=<%= pagination.currentPage + 1 %>" aria-label="Next">
+                    <span aria-hidden="true">&raquo;</span>
+                </a>
+            </li>
+            <% } else { %>
+            <li class="page-item disabled">
+                <span class="page-link" aria-label="Next">&raquo;</span>
+            </li>
+            <% } %>
+        </ul>
+    </nav>
+    <% } %>
+
+    <!-- Lightbox -->
+    <div class="lightbox" id="lightbox" onclick="closeLightboxOnBg(event)">
+        <button class="lb-close" onclick="closeLightbox()"><i class="fas fa-times"></i></button>
+        <button class="lb-nav lb-prev" onclick="lbNav(-1)"><i class="fas fa-chevron-left"></i></button>
+        <button class="lb-nav lb-next" onclick="lbNav(1)"><i class="fas fa-chevron-right"></i></button>
+        <div class="lb-inner">
+            <img id="lbImg" src="" alt="Gallery image">
+        </div>
+        <div class="lb-counter" id="lbCounter"></div>
+    </div>
+
+    <% } else { %>
+    <!-- Empty State -->
+    <div class="empty-gallery wow fadeInUp" data-wow-delay="0.2s">
+        <i class="fas fa-images"></i>
+        <h4>Gallery Coming Soon</h4>
+        <p>Our gallery is being curated. Beautiful moments will appear here soon!</p>
+        <a href="/contact" class="btn btn-primary mt-3 px-4">Contact Us</a>
+    </div>
+    <% } %>
+
+</div>
+
+<!-- Slick Image Strip (always shown below) -->
+<% if (images && images.length === 0) { %>
+<div class="container-xxl py-4 mb-5">
+    <div class="container">
+        <div class="text-center mb-4">
+            <h5 style="color:rgb(61,6,75);" class="fw-bold">School Snapshots</h5>
+        </div>
+        <div style="display:flex; gap:14px; overflow-x:auto; padding-bottom:10px; scrollbar-width:thin;">
+            <% ['slick-slider-img-1.jpg','slick-slider-img-2.jpg','slick-slider-img-3.jpg',
+                'slick-slider-img-4.jpg','slick-slider-img-5.jpg','slick-slider-img-6.jpg'].forEach(function(img){ %>
+            <img src="/public/<%= img %>" alt="School snapshot"
+                 style="height:200px; min-width:280px; border-radius:14px; object-fit:cover; flex-shrink:0; box-shadow:0 4px 15px rgba(0,0,0,0.1);">
+            <% }); %>
+        </div>
+    </div>
+</div>
+<% } %>
+
+<%- include('partials/footer') %>
+
+<!-- Inject images data to avoid editor JS syntax/validation errors -->
+<script id="galleryImagesData" type="application/json">
+    <%- JSON.stringify(images || []) %>
+</script>
+
+<script>
+    // Set animation delay and click handlers dynamically to avoid inline style/JS validation errors
+    document.querySelectorAll('.gallery-item').forEach(item => {
+        const delay = item.getAttribute('data-delay');
+        if (delay) {
+            item.style.animationDelay = delay + 's';
+        }
+        item.addEventListener('click', () => {
+            const idx = parseInt(item.getAttribute('data-index'), 10);
+            openLightbox(idx);
+        });
+    });
+
+    // ── Lightbox ──
+    const images = JSON.parse(document.getElementById('galleryImagesData').textContent);
+    let currentIdx = 0;
+
+    function openLightbox(idx) {
+        currentIdx = idx;
+        document.getElementById('lbImg').src = images[idx].url;
+        document.getElementById('lbCounter').textContent = (idx + 1) + ' / ' + images.length;
+        document.getElementById('lightbox').classList.add('open');
+        document.body.style.overflow = 'hidden';
+    }
+
+    function closeLightbox() {
+        document.getElementById('lightbox').classList.remove('open');
+        document.body.style.overflow = '';
+    }
+
+    function closeLightboxOnBg(e) {
+        if (e.target === document.getElementById('lightbox')) closeLightbox();
+    }
+
+    function lbNav(dir) {
+        currentIdx = (currentIdx + dir + images.length) % images.length;
+        const img = document.getElementById('lbImg');
+        img.style.opacity = '0';
+        setTimeout(() => {
+            img.src = images[currentIdx].url;
+            document.getElementById('lbCounter').textContent = (currentIdx + 1) + ' / ' + images.length;
+            img.style.opacity = '1';
+        }, 150);
+    }
+
+    // Keyboard navigation
+    document.addEventListener('keydown', function(e) {
+        if (!document.getElementById('lightbox').classList.contains('open')) return;
+        if (e.key === 'Escape') closeLightbox();
+        if (e.key === 'ArrowRight') lbNav(1);
+        if (e.key === 'ArrowLeft')  lbNav(-1);
+    });
+
+    // ── Gallery Filter ──
+    function filterGallery(type, btn) {
+        document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        // Both filters show all images for now — can be extended
+        document.querySelectorAll('.gallery-item').forEach(item => {
+            item.style.display = '';
+            item.style.animation = 'fadeInUp 0.4s ease both';
+        });
+    }
+</script>
