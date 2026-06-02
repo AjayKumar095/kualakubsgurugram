@@ -202,6 +202,12 @@ app.get(['/testimonial', '/testimonial.html'], (req, res) =>
 app.get(['/contact', '/contact.html'], (req, res) =>
   res.render('contact', { ...siteData, currentPath: req.path, pageTitle: 'Contact Us' }));
 
+app.get(['/privacy-policy', '/privacyPolicy.html'], (req, res) =>
+  res.render('privacyPolicy', { ...siteData, currentPath: req.path, pageTitle: 'privacy-policy' }));
+
+app.get(['/terms-conditions', '/termsConditions.html'], (req, res) =>
+  res.render('termsConditions', { ...siteData, currentPath: req.path, pageTitle: 'terms-conditions' }));
+
 app.get(['/message-from-the-chairman', '/chairmanMessage.html'], (req, res) =>
   res.render('chairmanMessage', { ...siteData, currentPath: req.path, pageTitle: 'Message from the Chairman' }));
 
