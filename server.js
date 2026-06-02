@@ -3,15 +3,54 @@
  * Node.js + Express + EJS + Multer + Sessions
  */
 
-const express    = require('express');
-const path       = require('path');
-const fs         = require('fs');
-const multer     = require('multer');
-const session    = require('express-session');
-const flash      = require('connect-flash');
+require('dotenv').config();
+
+const express     = require('express');
+const path        = require('path');
+const fs          = require('fs');
+const multer      = require('multer');
+const session     = require('express-session');
+const flash       = require('connect-flash');
+const helmet      = require('helmet');
+const compression = require('compression');
+const morgan      = require('morgan');
 
 const app  = express();
 const PORT = process.env.PORT || 3000;
+
+// ─── Trust Proxy (Required for secure sessions behind reverse proxies) ────────
+if (process.env.NODE_ENV === 'production') {
+  app.set('trust proxy', 1);
+}
+
+// ─── Security Headers ─────────────────────────────────────────────────────────
+app.use(helmet({
+  contentSecurityPolicy: {
+    directives: {
+      defaultSrc: ["'self'"],
+      scriptSrc: ["'self'", "'unsafe-inline'", "'unsafe-eval'", "https://code.jquery.com", "https://cdn.jsdelivr.net"],
+      styleSrc: ["'self'", "'unsafe-inline'", "https://fonts.googleapis.com", "https://cdn.jsdelivr.net", "https://cdnjs.cloudflare.com"],
+      fontSrc: ["'self'", "https://fonts.gstatic.com", "https://cdnjs.cloudflare.com", "https://cdn.jsdelivr.net"],
+      imgSrc: ["'self'", "data:", "*"],
+      frameSrc: ["'self'", "https://www.google.com", "https://form.edmissioncrm.com"],
+      connectSrc: ["'self'", "https://eflow.kualakubsgurugram.in"],
+    },
+  },
+}));
+
+// ─── Performance / Compression ───────────────────────────────────────────────
+app.use(compression());
+
+// ─── Logging ─────────────────────────────────────────────────────────────────
+const logDir = path.join(__dirname, 'logs');
+if (!fs.existsSync(logDir)) {
+  fs.mkdirSync(logDir);
+}
+// 1. Log to console for real-time monitoring
+app.use(morgan('dev'));
+// 2. Log to physical access file for audit and troubleshooting
+const accessLogStream = fs.createWriteStream(path.join(logDir, 'access.log'), { flags: 'a' });
+app.use(morgan('combined', { stream: accessLogStream }));
 
 app.use('/css', express.static(path.join(__dirname, 'css')));
 app.use('/js', express.static(path.join(__dirname, 'js')));
