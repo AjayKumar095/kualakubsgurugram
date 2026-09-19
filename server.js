@@ -224,7 +224,7 @@ app.get(['/career', '/career.html'], (req, res) =>
   res.render('career', { ...siteData, currentPath: req.path, pageTitle: 'Career' }));
 
 app.get(['/gallery', '/gallery.html'], (req, res) => {
-  const allImages = readDir(IMAGES_DIR, IMAGE_EXTS);
+  const allImages = readDir(IMAGES_DIR, IMAGE_EXTS); 
   const page = parseInt(req.query.page, 10) || 1;
   const limit = 12;
   const totalImages = allImages.length;
