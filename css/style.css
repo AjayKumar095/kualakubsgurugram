@@ -461,3 +461,106 @@
         height: 300px;
     }
 }
+
+/*** Admission News Ticker ***/
+.news-ticker-container {
+    background-color: var(--accent-purple);
+    color: #ffffff;
+    display: flex;
+    align-items: center;
+    overflow: hidden;
+    position: relative;
+    border-bottom: 2px solid var(--primary);
+    height: 38px;
+    z-index: 1000;
+}
+
+.news-ticker-badge {
+    background-color: var(--primary);
+    color: #ffffff;
+    font-weight: 700;
+    font-size: 0.82rem;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    padding: 0 16px;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    flex-shrink: 0;
+    z-index: 2;
+}
+
+.news-ticker-wrap {
+    flex-grow: 1;
+    overflow: hidden;
+    white-space: nowrap;
+    position: relative;
+    height: 100%;
+    display: flex;
+    align-items: center;
+}
+
+.news-ticker-track {
+    display: inline-flex;
+    white-space: nowrap;
+    animation: newsTicker 26s linear infinite;
+    will-change: transform;
+}
+
+.news-ticker-container:hover .news-ticker-track {
+    animation-play-state: paused;
+}
+
+.news-ticker-group {
+    display: inline-flex;
+    align-items: center;
+    white-space: nowrap;
+}
+
+.news-ticker-item {
+    display: inline-flex;
+    align-items: center;
+    font-size: 0.92rem;
+    font-weight: 500;
+    padding: 0 18px;
+    color: #ffffff;
+}
+
+.news-ticker-item a {
+    color: #ffffff;
+    text-decoration: none;
+    transition: color 0.2s ease;
+}
+
+.news-ticker-item a:hover {
+    color: var(--primary);
+}
+
+.news-ticker-divider {
+    color: var(--primary);
+    font-size: 0.9rem;
+    line-height: 1;
+}
+
+@keyframes newsTicker {
+    0% {
+        transform: translateX(0);
+    }
+    100% {
+        transform: translateX(-50%);
+    }
+}
+
+@media (max-width: 576px) {
+    .news-ticker-container {
+        height: 34px;
+    }
+    .news-ticker-badge {
+        padding: 0 10px;
+        font-size: 0.72rem;
+    }
+    .news-ticker-item {
+        font-size: 0.82rem;
+        padding: 0 10px;
+    }
+}
