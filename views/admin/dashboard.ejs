@@ -4,9 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>
-        <%= pageTitle %> | <%= siteName %>
-    </title>
+    <title><%= pageTitle %> | <%= siteName %></title>
     <link rel="icon" href="/public/fav-icon.png">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet">
@@ -21,11 +19,7 @@
             --bg: #f4f0f8;
         }
 
-        * {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
-        }
+        * { box-sizing: border-box; margin: 0; padding: 0; }
 
         body {
             font-family: 'Nunito', sans-serif;
@@ -48,15 +42,8 @@
             box-shadow: 4px 0 20px rgba(0, 0, 0, 0.15);
         }
 
-        .sidebar-logo {
-            padding: 1.5rem 1.2rem;
-            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-        }
-
-        .sidebar-logo img {
-            width: 140px;
-            filter: brightness(0) invert(1);
-        }
+        .sidebar-logo { padding: 1.5rem 1.2rem; border-bottom: 1px solid rgba(255, 255, 255, 0.1); }
+        .sidebar-logo img { width: 140px; filter: brightness(0) invert(1); }
 
         .admin-tag {
             font-size: 0.65rem;
@@ -67,10 +54,7 @@
             margin-top: 4px;
         }
 
-        .sidebar-nav {
-            padding: 1rem 0;
-            flex: 1;
-        }
+        .sidebar-nav { padding: 1rem 0; flex: 1; }
 
         .nav-item-s {
             display: flex;
@@ -93,16 +77,11 @@
             border-left-color: var(--gold);
         }
 
-        .nav-item-s i {
-            width: 20px;
-            text-align: center;
-            font-size: 1rem;
-        }
+        .nav-item-s i { width: 20px; text-align: center; font-size: 1rem; }
 
-        .sidebar-footer {
-            padding: 1.2rem 1.5rem;
-            border-top: 1px solid rgba(255, 255, 255, 0.1);
-        }
+        .sidebar-divider { border: 0; border-top: 1px solid rgba(255, 255, 255, 0.1); margin: 8px 1.5rem; }
+
+        .sidebar-footer { padding: 1.2rem 1.5rem; border-top: 1px solid rgba(255, 255, 255, 0.1); }
 
         .logout-btn {
             display: flex;
@@ -115,19 +94,11 @@
             transition: color 0.2s;
         }
 
-        .logout-btn:hover {
-            color: #ff8080;
-        }
+        .logout-btn:hover { color: #ff8080; }
 
         /* ── Main ── */
-        .main-wrap {
-            margin-left: var(--sidebar-w);
-            flex: 1;
-            display: flex;
-            flex-direction: column;
-        }
+        .main-wrap { margin-left: var(--sidebar-w); flex: 1; display: flex; flex-direction: column; min-width: 0; }
 
-        /* ── Top Bar ── */
         .topbar {
             background: #fff;
             padding: 1rem 2rem;
@@ -140,33 +111,15 @@
             z-index: 50;
         }
 
-        .topbar h1 {
-            font-size: 1.3rem;
-            font-weight: 800;
-            color: var(--purple);
-            margin: 0;
-        }
+        .topbar h1 { font-size: 1.3rem; font-weight: 800; color: var(--purple); margin: 0; }
+        .btn-menu { background: var(--purple); color: #fff; border-radius: 8px; }
+        .session-info { font-size: 0.8rem; color: #888; }
+        .session-info span { color: var(--purple); font-weight: 700; }
 
-        .session-info {
-            font-size: 0.8rem;
-            color: #888;
-        }
-
-        .session-info span {
-            color: var(--purple);
-            font-weight: 700;
-        }
-
-        /* ── Content ── */
-        .content {
-            padding: 2rem;
-        }
+        .content { padding: 2rem; }
 
         /* ── Flash Messages ── */
-        .flash-success {
-            background: #d4edda;
-            border: 1px solid #c3e6cb;
-            color: #155724;
+        .flash-success, .flash-error {
             border-radius: 12px;
             padding: 12px 18px;
             margin-bottom: 1.5rem;
@@ -176,29 +129,20 @@
             animation: slideDown 0.3s ease;
         }
 
-        .flash-error {
-            background: #f8d7da;
-            border: 1px solid #f5c6cb;
-            color: #721c24;
-            border-radius: 12px;
-            padding: 12px 18px;
-            margin-bottom: 1.5rem;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            animation: slideDown 0.3s ease;
+        .flash-success { background: #d4edda; border: 1px solid #c3e6cb; color: #155724; }
+        .flash-error { background: #f8d7da; border: 1px solid #f5c6cb; color: #721c24; }
+
+        .flash-close {
+            margin-left: auto;
+            background: none;
+            border: none;
+            cursor: pointer;
+            font-size: 1rem;
         }
 
         @keyframes slideDown {
-            from {
-                opacity: 0;
-                transform: translateY(-10px);
-            }
-
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
+            from { opacity: 0; transform: translateY(-10px); }
+            to { opacity: 1; transform: translateY(0); }
         }
 
         /* ── Stats Row ── */
@@ -229,34 +173,11 @@
             font-size: 1.4rem;
         }
 
-        .stat-icon.purple {
-            background: rgba(61, 6, 75, 0.1);
-            color: var(--purple);
-        }
-
-        .stat-icon.gold {
-            background: rgba(255, 186, 0, 0.15);
-            color: #d49d00;
-        }
-
-        .stat-icon.orange {
-            background: rgba(255, 107, 53, 0.12);
-            color: var(--orange);
-        }
-
-        .stat-num {
-            font-size: 1.8rem;
-            font-weight: 800;
-            color: var(--purple);
-            line-height: 1;
-        }
-
-        .stat-label {
-            font-size: 0.8rem;
-            color: #888;
-            font-weight: 600;
-            margin-top: 2px;
-        }
+        .stat-icon.purple { background: rgba(61, 6, 75, 0.1); color: var(--purple); }
+        .stat-icon.gold { background: rgba(255, 186, 0, 0.15); color: #d49d00; }
+        .stat-icon.orange { background: rgba(255, 107, 53, 0.12); color: var(--orange); }
+        .stat-num { font-size: 1.8rem; font-weight: 800; color: var(--purple); line-height: 1; }
+        .stat-label { font-size: 0.8rem; color: #888; font-weight: 600; margin-top: 2px; }
 
         /* ── Section Card ── */
         .section-card {
@@ -272,19 +193,45 @@
             display: flex;
             align-items: center;
             justify-content: space-between;
+            gap: 10px;
+            flex-wrap: wrap;
             border-bottom: 1px solid #f0eaf5;
         }
 
-        .section-header h2 {
-            font-size: 1.1rem;
-            font-weight: 800;
-            color: var(--purple);
-            margin: 0;
+        .section-header h2 { font-size: 1.1rem; font-weight: 800; color: var(--purple); margin: 0; }
+        .section-body { padding: 1.8rem; }
+        .hint { font-size: 0.8rem; color: #999; }
+
+        /* ── Section picker (upload form) ── */
+        .section-pick {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 14px;
+            margin-bottom: 1.2rem;
         }
 
-        .section-body {
-            padding: 1.8rem;
+        .section-pick label { display: block; font-size: 0.8rem; font-weight: 700; color: var(--purple); margin-bottom: 4px; }
+
+        .section-pick select,
+        .section-pick input[type="text"],
+        .move-form select,
+        .move-form input[type="text"],
+        .create-section-form input[type="text"] {
+            width: 100%;
+            border: 2px solid #e0d0ee;
+            border-radius: 10px;
+            padding: 8px 12px;
+            font-family: inherit;
+            font-size: 0.9rem;
+            background: #fff;
+            color: #333;
         }
+
+        .section-pick select:focus,
+        .section-pick input[type="text"]:focus,
+        .move-form select:focus,
+        .move-form input[type="text"]:focus,
+        .create-section-form input[type="text"]:focus { outline: none; border-color: var(--purple); }
 
         /* ── Upload Form ── */
         .upload-zone {
@@ -298,11 +245,7 @@
             position: relative;
         }
 
-        .upload-zone:hover,
-        .upload-zone.drag-over {
-            border-color: var(--purple);
-            background: rgba(61, 6, 75, 0.04);
-        }
+        .upload-zone:hover, .upload-zone.drag-over { border-color: var(--purple); background: rgba(61, 6, 75, 0.04); }
 
         .upload-zone input[type="file"] {
             position: absolute;
@@ -313,44 +256,14 @@
             height: 100%;
         }
 
-        .upload-icon {
-            font-size: 2.5rem;
-            color: #c0a8d0;
-            margin-bottom: 0.5rem;
-        }
+        .upload-icon { font-size: 2.5rem; color: #c0a8d0; margin-bottom: 0.5rem; }
+        .upload-text { color: #888; font-size: 0.9rem; }
+        .upload-text strong { color: var(--purple); }
+        .file-name-display { margin-top: 10px; font-size: 0.85rem; color: var(--purple); font-weight: 600; }
 
-        .upload-text {
-            color: #888;
-            font-size: 0.9rem;
-        }
-
-        .upload-text strong {
-            color: var(--purple);
-        }
-
-        .file-name-display {
-            margin-top: 10px;
-            font-size: 0.85rem;
-            color: var(--purple);
-            font-weight: 600;
-        }
-
-        .progress-wrap {
-            display: none;
-            margin-top: 12px;
-        }
-
-        .progress {
-            height: 6px;
-            border-radius: 10px;
-            background: #e9ecef;
-        }
-
-        .progress-bar {
-            background: linear-gradient(90deg, var(--purple), var(--gold));
-            border-radius: 10px;
-            transition: width 0.3s;
-        }
+        .progress-wrap { display: none; margin-top: 12px; }
+        .progress { height: 6px; border-radius: 10px; background: #e9ecef; }
+        .progress-bar { background: linear-gradient(90deg, var(--purple), var(--gold)); border-radius: 10px; transition: width 0.3s; }
 
         .btn-upload {
             background: linear-gradient(135deg, var(--purple), var(--purple-light));
@@ -365,26 +278,24 @@
             margin-top: 1rem;
         }
 
-        .btn-upload:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 6px 20px rgba(61, 6, 75, 0.3);
-        }
+        .btn-upload:hover { transform: translateY(-2px); box-shadow: 0 6px 20px rgba(61, 6, 75, 0.3); }
+        .btn-upload:disabled { opacity: 0.7; cursor: wait; transform: none; box-shadow: none; }
 
-        /* ── Media Grid ── */
+        /* ── Create section form ── */
+        .create-section-form { display: flex; gap: 8px; align-items: center; flex-wrap: wrap; }
+        .create-section-form input[type="text"] { width: 220px; }
+
+        /* ── Media toolbar ── */
         .media-toolbar {
             display: flex;
-            align-items: center;
+            align-items: flex-start;
             justify-content: space-between;
-            margin-bottom: 1rem;
+            margin-bottom: 1.2rem;
             flex-wrap: wrap;
-            gap: 10px;
+            gap: 12px;
         }
 
-        .select-controls {
-            display: flex;
-            gap: 8px;
-            align-items: center;
-        }
+        .select-controls { display: flex; gap: 8px; align-items: center; }
 
         .btn-sm-action {
             font-size: 0.8rem;
@@ -394,25 +305,25 @@
             border: none;
             cursor: pointer;
             transition: all 0.2s;
+            font-family: inherit;
         }
 
-        .btn-select-all {
-            background: #f0eaf5;
-            color: var(--purple);
-        }
+        .btn-select-all { background: #f0eaf5; color: var(--purple); }
+        .btn-select-all:hover { background: #e0d0ee; }
+        .btn-deselect { background: #f0f0f0; color: #666; }
+        .btn-deselect:hover { background: #e0e0e0; }
+        .btn-del-section { background: #fbe9eb; color: #c82333; }
+        .btn-del-section:hover { background: #f5c6cb; }
 
-        .btn-select-all:hover {
-            background: #e0d0ee;
-        }
+        .selected-count { font-size: 0.8rem; color: #dc3545; font-weight: 700; }
 
-        .btn-deselect {
-            background: #f0f0f0;
-            color: #666;
-        }
+        .selection-actions { display: none; gap: 12px; align-items: center; flex-wrap: wrap; }
+        .selection-actions.show { display: flex; }
 
-        .btn-deselect:hover {
-            background: #e0e0e0;
-        }
+        .move-form { display: flex; gap: 8px; align-items: center; flex-wrap: wrap; }
+        .move-form select, .move-form input[type="text"] { width: 190px; padding: 6px 10px; font-size: 0.82rem; }
+        .btn-move { background: var(--purple); color: #fff; }
+        .btn-move:hover { background: var(--purple-light); }
 
         .btn-delete-selected {
             background: linear-gradient(135deg, #dc3545, #c82333);
@@ -424,32 +335,36 @@
             border: none;
             cursor: pointer;
             transition: all 0.3s;
-            display: none;
+            display: flex;
             align-items: center;
             gap: 6px;
+            font-family: inherit;
         }
 
-        .btn-delete-selected:hover {
-            transform: translateY(-1px);
-            box-shadow: 0 4px 15px rgba(220, 53, 69, 0.35);
-        }
+        .btn-delete-selected:hover { transform: translateY(-1px); box-shadow: 0 4px 15px rgba(220, 53, 69, 0.35); }
 
-        .btn-delete-selected.show {
+        /* ── Section groups ── */
+        .section-group { margin-bottom: 2rem; }
+        .section-group:last-child { margin-bottom: 0; }
+
+        .group-head {
             display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 10px;
+            flex-wrap: wrap;
+            padding-bottom: 8px;
+            margin-bottom: 12px;
+            border-bottom: 2px solid #f0eaf5;
         }
 
-        .selected-count {
-            font-size: 0.8rem;
-            color: #dc3545;
-            font-weight: 700;
-        }
+        .group-title { font-weight: 800; color: var(--purple); text-transform: capitalize; display: flex; align-items: center; gap: 8px; }
+        .group-count { background: #f0eaf5; color: var(--purple); font-size: 0.7rem; padding: 2px 9px; border-radius: 20px; }
+        .group-actions { display: flex; gap: 8px; align-items: center; }
+        .empty-group { color: #bbb; font-size: 0.85rem; padding: 0.6rem 0; }
 
         /* ── Image Grid ── */
-        .img-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
-            gap: 14px;
-        }
+        .img-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); gap: 14px; }
 
         .img-item {
             position: relative;
@@ -461,45 +376,35 @@
             transition: transform 0.2s, box-shadow 0.2s;
         }
 
-        .img-item:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
-        }
+        .img-item:hover { transform: translateY(-3px); box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15); }
+        .img-item img { width: 100%; height: 100%; object-fit: cover; display: block; }
 
-        .img-item img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-            display: block;
-        }
-
-        .img-item .select-cb {
+        .select-cb {
             position: absolute;
             top: 8px;
             left: 8px;
             width: 22px;
             height: 22px;
-            accent-color: var(--purple);
             cursor: pointer;
             z-index: 5;
             opacity: 0;
             transition: opacity 0.2s;
         }
 
-        .img-item:hover .select-cb,
-        .img-item.selected .select-cb {
-            opacity: 1;
-        }
+        .img-item .select-cb { accent-color: var(--purple); }
+        .vid-item .select-cb { accent-color: var(--gold); top: 10px; left: 10px; }
 
-        .img-item.selected {
-            outline: 3px solid var(--purple);
-        }
+        .img-item:hover .select-cb, .img-item.selected .select-cb,
+        .vid-item:hover .select-cb, .vid-item.selected .select-cb { opacity: 1; }
+
+        .img-item.selected { outline: 3px solid var(--purple); }
 
         .img-item.selected::after {
             content: '';
             position: absolute;
             inset: 0;
             background: rgba(61, 6, 75, 0.2);
+            pointer-events: none;
         }
 
         .img-name {
@@ -517,11 +422,7 @@
         }
 
         /* ── Video Grid ── */
-        .vid-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
-            gap: 16px;
-        }
+        .vid-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 16px; }
 
         .vid-item {
             position: relative;
@@ -530,48 +431,14 @@
             background: #1a0020;
             box-shadow: 0 3px 12px rgba(0, 0, 0, 0.15);
             transition: transform 0.2s, box-shadow 0.2s;
-        }
-
-        .vid-item:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
-        }
-
-        .vid-item video {
-            width: 100%;
-            display: block;
-            max-height: 180px;
-            object-fit: cover;
-        }
-
-        .vid-item .select-cb {
-            position: absolute;
-            top: 10px;
-            left: 10px;
-            width: 22px;
-            height: 22px;
-            accent-color: var(--gold);
             cursor: pointer;
-            z-index: 5;
-            opacity: 0;
-            transition: opacity 0.2s;
         }
 
-        .vid-item:hover .select-cb,
-        .vid-item.selected .select-cb {
-            opacity: 1;
-        }
+        .vid-item:hover { transform: translateY(-3px); box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2); }
+        .vid-item video { width: 100%; display: block; max-height: 180px; object-fit: cover; pointer-events: none; }
+        .vid-item.selected { outline: 3px solid var(--gold); }
 
-        .vid-item.selected {
-            outline: 3px solid var(--gold);
-        }
-
-        .vid-footer {
-            padding: 10px 12px;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-        }
+        .vid-footer { padding: 10px 12px; display: flex; align-items: center; justify-content: space-between; }
 
         .vid-name {
             color: rgba(255, 255, 255, 0.85);
@@ -595,27 +462,12 @@
         }
 
         /* ── Empty State ── */
-        .empty-state {
-            text-align: center;
-            padding: 3rem 2rem;
-            color: #bbb;
-        }
-
-        .empty-state i {
-            font-size: 3rem;
-            margin-bottom: 1rem;
-        }
-
-        .empty-state p {
-            font-size: 0.95rem;
-        }
+        .empty-state { text-align: center; padding: 3rem 2rem; color: #bbb; }
+        .empty-state i { font-size: 3rem; margin-bottom: 1rem; }
+        .empty-state p { font-size: 0.95rem; }
 
         /* ── Tab Pills ── */
-        .tab-pills {
-            display: flex;
-            gap: 8px;
-            margin-bottom: 2rem;
-        }
+        .tab-pills { display: flex; gap: 8px; margin-bottom: 2rem; flex-wrap: wrap; }
 
         .tab-pill {
             padding: 8px 20px;
@@ -629,50 +481,21 @@
             transition: all 0.25s;
         }
 
-        .tab-pill.active {
-            background: var(--purple);
-            border-color: var(--purple);
-            color: #fff;
-        }
+        .tab-pill.active { background: var(--purple); border-color: var(--purple); color: #fff; }
 
-        .tab-content-section {
-            display: none;
-        }
-
-        .tab-content-section.active {
-            display: block;
-        }
+        .tab-content-section { display: none; }
+        .tab-content-section.active { display: block; }
 
         /* ── Responsive ── */
         @media (max-width: 768px) {
-            .sidebar {
-                transform: translateX(-100%);
-                transition: transform 0.3s;
-            }
-
-            .sidebar.open {
-                transform: translateX(0);
-            }
-
-            .main-wrap {
-                margin-left: 0;
-            }
-
-            .topbar {
-                padding: 1rem;
-            }
-
-            .content {
-                padding: 1rem;
-            }
-
-            .img-grid {
-                grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
-            }
-
-            .vid-grid {
-                grid-template-columns: 1fr;
-            }
+            .sidebar { transform: translateX(-100%); transition: transform 0.3s; }
+            .sidebar.open { transform: translateX(0); }
+            .main-wrap { margin-left: 0; }
+            .topbar { padding: 1rem; }
+            .content { padding: 1rem; }
+            .section-body { padding: 1.2rem; }
+            .img-grid { grid-template-columns: repeat(auto-fill, minmax(120px, 1fr)); }
+            .vid-grid { grid-template-columns: 1fr; }
         }
     </style>
 </head>
@@ -686,13 +509,13 @@
             <div class="admin-tag">⚙ Admin Panel</div>
         </div>
         <nav class="sidebar-nav">
-            <a class="nav-item-s active" onclick="showTab('images')">
+            <a class="nav-item-s active" data-tab="images">
                 <i class="fas fa-images"></i> Gallery Images
             </a>
-            <a class="nav-item-s" onclick="showTab('videos')">
+            <a class="nav-item-s" data-tab="videos">
                 <i class="fas fa-film"></i> Testimonial Videos
             </a>
-            <hr style="border-color:rgba(255,255,255,0.1); margin: 8px 1.5rem;">
+            <hr class="sidebar-divider">
             <a class="nav-item-s" href="/" target="_blank">
                 <i class="fas fa-globe"></i> View Website
             </a>
@@ -712,14 +535,13 @@
         <!-- Top Bar -->
         <div class="topbar">
             <div class="d-flex align-items-center gap-3">
-                <button class="d-md-none btn btn-sm" style="background:var(--purple);color:#fff;border-radius:8px;"
-                    onclick="document.getElementById('sidebar').classList.toggle('open')">
+                <button type="button" class="d-md-none btn btn-sm btn-menu" data-action="toggle-sidebar">
                     <i class="fas fa-bars"></i>
                 </button>
                 <h1><i class="fas fa-tachometer-alt me-2"></i>Dashboard</h1>
             </div>
             <div class="session-info">
-                Logged in <span id="sessionTimer"></span> ago
+                Logged in <span id="sessionTimer" data-login-time="<%= loginTime %>"></span> ago
             </div>
         </div>
 
@@ -727,404 +549,391 @@
         <div class="content">
 
             <!-- Flash Messages -->
-            <% if (success && success.length> 0) { %>
+            <% if (success && success.length > 0) { %>
                 <div class="flash-success">
                     <i class="fas fa-check-circle"></i>
-                    <%= success[0] %>
-                        <button onclick="this.parentElement.remove()"
-                            style="margin-left:auto;background:none;border:none;cursor:pointer;font-size:1rem;">✕</button>
+                    <span><%= success[0] %></span>
+                    <button type="button" class="flash-close" data-action="close-flash">✕</button>
                 </div>
-                <% } %>
-                    <% if (error && error.length> 0) { %>
-                        <div class="flash-error">
-                            <i class="fas fa-exclamation-circle"></i>
-                            <%= error[0] %>
-                                <button onclick="this.parentElement.remove()"
-                                    style="margin-left:auto;background:none;border:none;cursor:pointer;font-size:1rem;">✕</button>
-                        </div>
-                        <% } %>
+            <% } %>
+            <% if (error && error.length > 0) { %>
+                <div class="flash-error">
+                    <i class="fas fa-exclamation-circle"></i>
+                    <span><%= error[0] %></span>
+                    <button type="button" class="flash-close" data-action="close-flash">✕</button>
+                </div>
+            <% } %>
 
-                            <!-- Stats -->
-                            <div class="stats-row">
-                                <div class="stat-card">
-                                    <div class="stat-icon purple"><i class="fas fa-images"></i></div>
-                                    <div>
-                                        <div class="stat-num">
-                                            <%= images.length %>
-                                        </div>
-                                        <div class="stat-label">Gallery Images</div>
-                                    </div>
+            <!-- Stats -->
+            <div class="stats-row">
+                <div class="stat-card">
+                    <div class="stat-icon purple"><i class="fas fa-images"></i></div>
+                    <div>
+                        <div class="stat-num"><%= images.length %></div>
+                        <div class="stat-label">Gallery Images · <%= imageSections.length %> section<%= imageSections.length === 1 ? '' : 's' %></div>
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon gold"><i class="fas fa-film"></i></div>
+                    <div>
+                        <div class="stat-num"><%= videos.length %></div>
+                        <div class="stat-label">Testimonial Videos · <%= videoSections.length %> section<%= videoSections.length === 1 ? '' : 's' %></div>
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon orange"><i class="fas fa-clock"></i></div>
+                    <div>
+                        <div class="stat-num" id="sessionMin">60</div>
+                        <div class="stat-label">Min Until Auto-Logout</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Tabs -->
+            <div class="tab-pills">
+                <div class="tab-pill active" data-tab="images">
+                    <i class="fas fa-images me-1"></i> Gallery Images
+                </div>
+                <div class="tab-pill" data-tab="videos">
+                    <i class="fas fa-film me-1"></i> Testimonial Videos
+                </div>
+            </div>
+
+            <!-- ═══ IMAGES TAB ═══ -->
+            <div class="tab-content-section active" id="section-images">
+
+                <!-- Upload Image -->
+                <div class="section-card">
+                    <div class="section-header">
+                        <h2><i class="fas fa-cloud-upload-alt me-2"></i>Upload Gallery Images</h2>
+                        <span class="hint">Max 10MB each · JPG, PNG, GIF, WEBP · auto-compressed to under 200KB</span>
+                    </div>
+                    <div class="section-body">
+                        <form method="POST" action="/admin/upload/image" enctype="multipart/form-data"
+                            id="imageUploadForm" class="js-upload-form"
+                            data-progress="imageProgressWrap" data-bar="imageProgressBar">
+
+                            <div class="section-pick">
+                                <div>
+                                    <label for="imageSectionSelect">Upload to section</label>
+                                    <select name="section" id="imageSectionSelect" class="js-section-select"
+                                        data-new-input="imageNewSection">
+                                        <% imageSections.forEach(function (s) { %>
+                                            <option value="<%= s %>"><%= s.replace(/-/g, ' ') %></option>
+                                        <% }); %>
+                                        <option value="">➕ Create new section…</option>
+                                    </select>
                                 </div>
-                                <div class="stat-card">
-                                    <div class="stat-icon gold"><i class="fas fa-film"></i></div>
-                                    <div>
-                                        <div class="stat-num">
-                                            <%= videos.length %>
-                                        </div>
-                                        <div class="stat-label">Testimonial Videos</div>
-                                    </div>
-                                </div>
-                                <div class="stat-card">
-                                    <div class="stat-icon orange"><i class="fas fa-clock"></i></div>
-                                    <div>
-                                        <div class="stat-num" id="sessionMin">60</div>
-                                        <div class="stat-label">Min Until Auto-Logout</div>
-                                    </div>
+                                <div class="new-section-wrap">
+                                    <label for="imageNewSection">New section name</label>
+                                    <input type="text" name="new_section" id="imageNewSection" maxlength="60"
+                                        placeholder="e.g. new year celebration" autocomplete="off">
                                 </div>
                             </div>
 
-                            <!-- Tabs -->
-                            <div class="tab-pills">
-                                <div class="tab-pill active" id="tab-images" onclick="showTab('images')">
-                                    <i class="fas fa-images me-1"></i> Gallery Images
+                            <div class="upload-zone" id="imageDropZone">
+                                <input type="file" name="images" id="imageFile" accept="image/*" multiple
+                                    data-display="imageFileName">
+                                <div class="upload-icon"><i class="fas fa-image"></i></div>
+                                <div class="upload-text">
+                                    <strong>Click to browse</strong> or drag &amp; drop images here<br>
+                                    <small>JPG, PNG, GIF, WEBP · up to 20 files · saved as optimized WebP</small>
                                 </div>
-                                <div class="tab-pill" id="tab-videos" onclick="showTab('videos')">
-                                    <i class="fas fa-film me-1"></i> Testimonial Videos
+                                <div class="file-name-display" id="imageFileName"></div>
+                            </div>
+                            <div class="progress-wrap" id="imageProgressWrap">
+                                <div class="progress">
+                                    <div class="progress-bar" id="imageProgressBar" style="width:0%"></div>
+                                </div>
+                            </div>
+                            <button type="submit" class="btn-upload">
+                                <i class="fas fa-upload me-2"></i>Upload Images
+                            </button>
+                        </form>
+                    </div>
+                </div>
+
+                <!-- Image Library -->
+                <div class="section-card">
+                    <div class="section-header">
+                        <h2><i class="fas fa-th me-2"></i>Image Library (<%= images.length %>)</h2>
+                        <form method="POST" action="/admin/section/create" class="create-section-form">
+                            <input type="hidden" name="type" value="image">
+                            <input type="text" name="name" maxlength="60" placeholder="New empty section" required
+                                autocomplete="off">
+                            <button type="submit" class="btn-sm-action btn-select-all">
+                                <i class="fas fa-folder-plus"></i> Create
+                            </button>
+                        </form>
+                    </div>
+                    <div class="section-body">
+                        <% if (imageSections.length > 0) { %>
+                            <div class="media-toolbar">
+                                <div class="select-controls">
+                                    <button type="button" class="btn-sm-action btn-select-all"
+                                        data-action="select-all" data-type="image">Select All</button>
+                                    <button type="button" class="btn-sm-action btn-deselect"
+                                        data-action="deselect-all" data-type="image">Deselect</button>
+                                    <span class="selected-count" id="imageSelectedCount"></span>
+                                </div>
+
+                                <div class="selection-actions" id="imageSelectionActions">
+                                    <form method="POST" action="/admin/move" id="moveImagesForm" class="move-form">
+                                        <input type="hidden" name="type" value="image">
+                                        <div id="imageMoveInputs"></div>
+                                        <select name="target" class="js-section-select" data-new-input="imageMoveNew">
+                                            <% imageSections.forEach(function (s) { %>
+                                                <option value="<%= s %>"><%= s.replace(/-/g, ' ') %></option>
+                                            <% }); %>
+                                            <option value="">➕ New section…</option>
+                                        </select>
+                                        <span class="new-section-wrap">
+                                            <input type="text" name="new_section" id="imageMoveNew" maxlength="60"
+                                                placeholder="New section name" autocomplete="off">
+                                        </span>
+                                        <button type="button" class="btn-sm-action btn-move"
+                                            data-action="move-selected" data-type="image">
+                                            <i class="fas fa-arrows-alt"></i> Move
+                                        </button>
+                                    </form>
+
+                                    <form method="POST" action="/admin/delete" id="deleteImagesForm">
+                                        <input type="hidden" name="type" value="image">
+                                        <div id="imageDeleteInputs"></div>
+                                        <button type="button" id="btnDeleteImages" class="btn-delete-selected"
+                                            data-action="delete-selected" data-type="image">
+                                            <i class="fas fa-trash"></i> Delete
+                                        </button>
+                                    </form>
                                 </div>
                             </div>
 
-                            <!-- ═══ IMAGES TAB ═══ -->
-                            <div class="tab-content-section active" id="section-images">
-
-                                <!-- Upload Image -->
-                                <div class="section-card">
-                                    <div class="section-header">
-                                        <h2><i class="fas fa-cloud-upload-alt me-2"></i>Upload Gallery Image</h2>
-                                        <span style="font-size:0.8rem;color:#999;">Max 10MB · JPG, PNG, GIF, WEBP</span>
-                                    </div>
-                                    <div class="section-body">
-                                        <form method="POST" action="/admin/upload/image" enctype="multipart/form-data"
-                                            id="imageUploadForm">
-                                            <div class="upload-zone" id="imageDropZone">
-                                                <input type="file" name="images" id="imageFile" accept="image/*"
-                                                    multiple
-                                                    onchange="handleFileSelect(this,'imageFileName','imageUploadForm','imageProgressWrap')">
-                                                <div class="upload-icon"><i class="fas fa-image"></i></div>
-                                                <div class="upload-text">
-                                                    <strong>Click to browse</strong> or drag & drop images here<br>
-                                                    <small>Supported: JPG, PNG, GIF, WEBP (max 10MB per file, up to 20
-                                                        files)</small>
-                                                </div>
-                                                <div class="file-name-display" id="imageFileName"></div>
-                                            </div>
-                                            <div class="progress-wrap" id="imageProgressWrap">
-                                                <div class="progress">
-                                                    <div class="progress-bar" id="imageProgressBar" style="width:0%">
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <button type="submit" class="btn-upload"
-                                                onclick="startProgress('imageProgressWrap','imageProgressBar')">
-                                                <i class="fas fa-upload me-2"></i>Upload Images
-                                            </button>
-                                        </form>
-                                    </div>
-                                </div>
-
-                                <!-- Image Library -->
-                                <div class="section-card">
-                                    <div class="section-header">
-                                        <h2><i class="fas fa-th me-2"></i>Image Library (<%= images.length %>)</h2>
-                                    </div>
-                                    <div class="section-body">
-                                        <% if (images.length> 0) { %>
-                                            <div class="media-toolbar">
-                                                <div class="select-controls">
-                                                    <button class="btn-sm-action btn-select-all"
-                                                        onclick="selectAll('image')">Select All</button>
-                                                    <button class="btn-sm-action btn-deselect"
-                                                        onclick="deselectAll('image')">Deselect</button>
-                                                    <span class="selected-count" id="imageSelectedCount"></span>
-                                                </div>
-                                                <form method="POST" action="/admin/delete" id="deleteImagesForm">
+                            <% imageSections.forEach(function (section) { var list = imageGroups[section]; %>
+                                <div class="section-group">
+                                    <div class="group-head">
+                                        <div class="group-title">
+                                            <i class="fas fa-folder"></i>
+                                            <%= section.replace(/-/g, ' ') %>
+                                            <span class="group-count"><%= list.length %></span>
+                                        </div>
+                                        <div class="group-actions">
+                                            <% if (list.length > 0) { %>
+                                                <button type="button" class="btn-sm-action btn-select-all"
+                                                    data-action="select-section" data-type="image"
+                                                    data-section="<%= section %>">Select section</button>
+                                            <% } %>
+                                            <% if (section !== 'uncategorized') { %>
+                                                <form method="POST" action="/admin/section/delete"
+                                                    data-confirm="Delete section &quot;<%= section %>&quot;? Its files are kept and moved to &quot;uncategorized&quot;.">
                                                     <input type="hidden" name="type" value="image">
-                                                    <div id="imageDeleteInputs"></div>
-                                                    <button type="button" id="btnDeleteImages"
-                                                        class="btn-delete-selected"
-                                                        onclick="confirmDelete('deleteImagesForm','imageDeleteInputs','image')">
-                                                        <i class="fas fa-trash"></i> Delete Selected
+                                                    <input type="hidden" name="name" value="<%= section %>">
+                                                    <button type="submit" class="btn-sm-action btn-del-section"
+                                                        title="Delete section">
+                                                        <i class="fas fa-folder-minus"></i>
                                                     </button>
                                                 </form>
-                                            </div>
-                                            <div class="img-grid" id="imageGrid">
-                                                <% images.forEach(function(img) { %>
-                                                    <div class="img-item" data-type="image"
-                                                        data-file="<%= img.filename %>"
-                                                        onclick="toggleSelect(this,'image')">
-                                                        <input type="checkbox" class="select-cb"
-                                                            data-file="<%= img.filename %>"
-                                                            onclick="event.stopPropagation();toggleSelectCb(this,'image')">
-                                                        <img src="<%= img.url %>" alt="<%= img.filename %>"
-                                                            loading="lazy">
-                                                        <div class="img-name">
-                                                            <%= img.filename %>
-                                                        </div>
-                                                    </div>
-                                                    <% }); %>
-                                            </div>
-                                            <% } else { %>
-                                                <div class="empty-state">
-                                                    <i class="fas fa-image"></i>
-                                                    <p>No images uploaded yet.<br>Upload your first gallery image above.
-                                                    </p>
-                                                </div>
-                                                <% } %>
+                                            <% } %>
+                                        </div>
                                     </div>
+
+                                    <% if (list.length > 0) { %>
+                                        <div class="img-grid">
+                                            <% list.forEach(function (img) { %>
+                                                <div class="img-item media-item" data-type="image"
+                                                    data-section="<%= section %>" data-file="<%= img.filename %>">
+                                                    <input type="checkbox" class="select-cb">
+                                                    <img src="<%= img.url %>" alt="<%= img.filename %>" loading="lazy">
+                                                    <div class="img-name"><%= img.filename %></div>
+                                                </div>
+                                            <% }); %>
+                                        </div>
+                                    <% } else { %>
+                                        <p class="empty-group">No images in this section yet.</p>
+                                    <% } %>
+                                </div>
+                            <% }); %>
+                        <% } else { %>
+                            <div class="empty-state">
+                                <i class="fas fa-image"></i>
+                                <p>No images uploaded yet.<br>Upload your first gallery image above.</p>
+                            </div>
+                        <% } %>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ═══ VIDEOS TAB ═══ -->
+            <div class="tab-content-section" id="section-videos">
+
+                <!-- Upload Video -->
+                <div class="section-card">
+                    <div class="section-header">
+                        <h2><i class="fas fa-cloud-upload-alt me-2"></i>Upload Testimonial Video</h2>
+                        <span class="hint">Max 50MB · MP4, WEBM, MOV</span>
+                    </div>
+                    <div class="section-body">
+                        <form method="POST" action="/admin/upload/video" enctype="multipart/form-data"
+                            id="videoUploadForm" class="js-upload-form"
+                            data-progress="videoProgressWrap" data-bar="videoProgressBar">
+
+                            <div class="section-pick">
+                                <div>
+                                    <label for="videoSectionSelect">Upload to section</label>
+                                    <select name="section" id="videoSectionSelect" class="js-section-select"
+                                        data-new-input="videoNewSection">
+                                        <% videoSections.forEach(function (s) { %>
+                                            <option value="<%= s %>"><%= s.replace(/-/g, ' ') %></option>
+                                        <% }); %>
+                                        <option value="">➕ Create new section…</option>
+                                    </select>
+                                </div>
+                                <div class="new-section-wrap">
+                                    <label for="videoNewSection">New section name</label>
+                                    <input type="text" name="new_section" id="videoNewSection" maxlength="60"
+                                        placeholder="e.g. parent reviews" autocomplete="off">
                                 </div>
                             </div>
 
-                            <!-- ═══ VIDEOS TAB ═══ -->
-                            <div class="tab-content-section" id="section-videos">
+                            <div class="upload-zone" id="videoDropZone">
+                                <input type="file" name="video" id="videoFile" accept="video/*"
+                                    data-display="videoFileName">
+                                <div class="upload-icon"><i class="fas fa-film"></i></div>
+                                <div class="upload-text">
+                                    <strong>Click to browse</strong> or drag &amp; drop a video here<br>
+                                    <small>Supported: MP4, WEBM, MOV (max 50MB)</small>
+                                </div>
+                                <div class="file-name-display" id="videoFileName"></div>
+                            </div>
+                            <div class="progress-wrap" id="videoProgressWrap">
+                                <div class="progress">
+                                    <div class="progress-bar" id="videoProgressBar" style="width:0%"></div>
+                                </div>
+                            </div>
+                            <button type="submit" class="btn-upload">
+                                <i class="fas fa-upload me-2"></i>Upload Video
+                            </button>
+                        </form>
+                    </div>
+                </div>
 
-                                <!-- Upload Video -->
-                                <div class="section-card">
-                                    <div class="section-header">
-                                        <h2><i class="fas fa-cloud-upload-alt me-2"></i>Upload Testimonial Video</h2>
-                                        <span style="font-size:0.8rem;color:#999;">Max 50MB · MP4, WEBM, MOV</span>
-                                    </div>
-                                    <div class="section-body">
-                                        <form method="POST" action="/admin/upload/video" enctype="multipart/form-data"
-                                            id="videoUploadForm">
-                                            <div class="upload-zone" id="videoDropZone">
-                                                <input type="file" name="video" id="videoFile" accept="video/*"
-                                                    onchange="handleFileSelect(this,'videoFileName','videoUploadForm','videoProgressWrap')">
-                                                <div class="upload-icon"><i class="fas fa-film"></i></div>
-                                                <div class="upload-text">
-                                                    <strong>Click to browse</strong> or drag & drop a video here<br>
-                                                    <small>Supported: MP4, WEBM, MOV (max 50MB)</small>
-                                                </div>
-                                                <div class="file-name-display" id="videoFileName"></div>
-                                            </div>
-                                            <div class="progress-wrap" id="videoProgressWrap">
-                                                <div class="progress">
-                                                    <div class="progress-bar" id="videoProgressBar" style="width:0%">
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <button type="submit" class="btn-upload"
-                                                onclick="startProgress('videoProgressWrap','videoProgressBar')">
-                                                <i class="fas fa-upload me-2"></i>Upload Video
-                                            </button>
-                                        </form>
-                                    </div>
+                <!-- Video Library -->
+                <div class="section-card">
+                    <div class="section-header">
+                        <h2><i class="fas fa-film me-2"></i>Video Library (<%= videos.length %>)</h2>
+                        <form method="POST" action="/admin/section/create" class="create-section-form">
+                            <input type="hidden" name="type" value="video">
+                            <input type="text" name="name" maxlength="60" placeholder="New empty section" required
+                                autocomplete="off">
+                            <button type="submit" class="btn-sm-action btn-select-all">
+                                <i class="fas fa-folder-plus"></i> Create
+                            </button>
+                        </form>
+                    </div>
+                    <div class="section-body">
+                        <% if (videoSections.length > 0) { %>
+                            <div class="media-toolbar">
+                                <div class="select-controls">
+                                    <button type="button" class="btn-sm-action btn-select-all"
+                                        data-action="select-all" data-type="video">Select All</button>
+                                    <button type="button" class="btn-sm-action btn-deselect"
+                                        data-action="deselect-all" data-type="video">Deselect</button>
+                                    <span class="selected-count" id="videoSelectedCount"></span>
                                 </div>
 
-                                <!-- Video Library -->
-                                <div class="section-card">
-                                    <div class="section-header">
-                                        <h2><i class="fas fa-film me-2"></i>Video Library (<%= videos.length %>)</h2>
-                                    </div>
-                                    <div class="section-body">
-                                        <% if (videos.length> 0) { %>
-                                            <div class="media-toolbar">
-                                                <div class="select-controls">
-                                                    <button class="btn-sm-action btn-select-all"
-                                                        onclick="selectAll('video')">Select All</button>
-                                                    <button class="btn-sm-action btn-deselect"
-                                                        onclick="deselectAll('video')">Deselect</button>
-                                                    <span class="selected-count" id="videoSelectedCount"></span>
-                                                </div>
-                                                <form method="POST" action="/admin/delete" id="deleteVideosForm">
+                                <div class="selection-actions" id="videoSelectionActions">
+                                    <form method="POST" action="/admin/move" id="moveVideosForm" class="move-form">
+                                        <input type="hidden" name="type" value="video">
+                                        <div id="videoMoveInputs"></div>
+                                        <select name="target" class="js-section-select" data-new-input="videoMoveNew">
+                                            <% videoSections.forEach(function (s) { %>
+                                                <option value="<%= s %>"><%= s.replace(/-/g, ' ') %></option>
+                                            <% }); %>
+                                            <option value="">➕ New section…</option>
+                                        </select>
+                                        <span class="new-section-wrap">
+                                            <input type="text" name="new_section" id="videoMoveNew" maxlength="60"
+                                                placeholder="New section name" autocomplete="off">
+                                        </span>
+                                        <button type="button" class="btn-sm-action btn-move"
+                                            data-action="move-selected" data-type="video">
+                                            <i class="fas fa-arrows-alt"></i> Move
+                                        </button>
+                                    </form>
+
+                                    <form method="POST" action="/admin/delete" id="deleteVideosForm">
+                                        <input type="hidden" name="type" value="video">
+                                        <div id="videoDeleteInputs"></div>
+                                        <button type="button" id="btnDeleteVideos" class="btn-delete-selected"
+                                            data-action="delete-selected" data-type="video">
+                                            <i class="fas fa-trash"></i> Delete
+                                        </button>
+                                    </form>
+                                </div>
+                            </div>
+
+                            <% videoSections.forEach(function (section) { var list = videoGroups[section]; %>
+                                <div class="section-group">
+                                    <div class="group-head">
+                                        <div class="group-title">
+                                            <i class="fas fa-folder"></i>
+                                            <%= section.replace(/-/g, ' ') %>
+                                            <span class="group-count"><%= list.length %></span>
+                                        </div>
+                                        <div class="group-actions">
+                                            <% if (list.length > 0) { %>
+                                                <button type="button" class="btn-sm-action btn-select-all"
+                                                    data-action="select-section" data-type="video"
+                                                    data-section="<%= section %>">Select section</button>
+                                            <% } %>
+                                            <% if (section !== 'uncategorized') { %>
+                                                <form method="POST" action="/admin/section/delete"
+                                                    data-confirm="Delete section &quot;<%= section %>&quot;? Its files are kept and moved to &quot;uncategorized&quot;.">
                                                     <input type="hidden" name="type" value="video">
-                                                    <div id="videoDeleteInputs"></div>
-                                                    <button type="button" id="btnDeleteVideos"
-                                                        class="btn-delete-selected"
-                                                        onclick="confirmDelete('deleteVideosForm','videoDeleteInputs','video')">
-                                                        <i class="fas fa-trash"></i> Delete Selected
+                                                    <input type="hidden" name="name" value="<%= section %>">
+                                                    <button type="submit" class="btn-sm-action btn-del-section"
+                                                        title="Delete section">
+                                                        <i class="fas fa-folder-minus"></i>
                                                     </button>
                                                 </form>
-                                            </div>
-                                            <div class="vid-grid" id="videoGrid">
-                                                <% videos.forEach(function(vid) { %>
-                                                    <div class="vid-item" data-type="video"
-                                                        data-file="<%= vid.filename %>"
-                                                        onclick="toggleSelect(this,'video')">
-                                                        <input type="checkbox" class="select-cb"
-                                                            data-file="<%= vid.filename %>"
-                                                            onclick="event.stopPropagation();toggleSelectCb(this,'video')">
-                                                        <video muted preload="metadata" style="pointer-events:none;">
-                                                            <source src="<%= vid.url %>" type="video/mp4">
-                                                        </video>
-                                                        <div class="vid-footer">
-                                                            <div class="vid-name" title="<%= vid.filename %>">
-                                                                <%= vid.filename %>
-                                                            </div>
-                                                            <div class="vid-badge">MP4</div>
-                                                        </div>
-                                                    </div>
-                                                    <% }); %>
-                                            </div>
-                                            <% } else { %>
-                                                <div class="empty-state">
-                                                    <i class="fas fa-film"></i>
-                                                    <p>No videos uploaded yet.<br>Upload testimonial videos to show on
-                                                        the home page.</p>
-                                                </div>
-                                                <% } %>
+                                            <% } %>
+                                        </div>
                                     </div>
+
+                                    <% if (list.length > 0) { %>
+                                        <div class="vid-grid">
+                                            <% list.forEach(function (vid) { %>
+                                                <div class="vid-item media-item" data-type="video"
+                                                    data-section="<%= section %>" data-file="<%= vid.filename %>">
+                                                    <input type="checkbox" class="select-cb">
+                                                    <video muted preload="metadata">
+                                                        <source src="<%= vid.url %>" type="video/mp4">
+                                                    </video>
+                                                    <div class="vid-footer">
+                                                        <div class="vid-name" title="<%= vid.filename %>"><%= vid.filename %></div>
+                                                        <div class="vid-badge"><%= vid.filename.split('.').pop().toUpperCase() %></div>
+                                                    </div>
+                                                </div>
+                                            <% }); %>
+                                        </div>
+                                    <% } else { %>
+                                        <p class="empty-group">No videos in this section yet.</p>
+                                    <% } %>
                                 </div>
+                            <% }); %>
+                        <% } else { %>
+                            <div class="empty-state">
+                                <i class="fas fa-film"></i>
+                                <p>No videos uploaded yet.<br>Upload testimonial videos to show on the home page.</p>
                             </div>
+                        <% } %>
+                    </div>
+                </div>
+            </div>
 
         </div><!-- /content -->
     </div><!-- /main-wrap -->
 
-    <script>
-        // ── Tab Switching ──
-        function showTab(tab) {
-            document.querySelectorAll('.tab-content-section').forEach(s => s.classList.remove('active'));
-            document.querySelectorAll('.tab-pill').forEach(p => p.classList.remove('active'));
-            document.querySelectorAll('.nav-item-s').forEach(n => n.classList.remove('active'));
-            document.getElementById('section-' + tab).classList.add('active');
-            document.getElementById('tab-' + tab).classList.add('active');
-            location.hash = tab;
-        }
-
-        // ── Auto-select tab from hash ──
-        window.addEventListener('DOMContentLoaded', () => {
-            const hash = location.hash.replace('#', '');
-            if (hash === 'videos') showTab('videos');
-            else showTab('images');
-        });
-
-        // ── Session Timer ──
-        (function () {
-            const loginTime = '<%= loginTime %>';
-            function updateTimer() {
-                const elapsed = Math.floor((Date.now() - new Date(loginTime)) / 1000);
-                const mins = Math.floor(elapsed / 60);
-                const secs = elapsed % 60;
-                const el = document.getElementById('sessionTimer');
-                if (el) el.textContent = mins + 'm ' + secs + 's';
-                // Countdown to auto-logout (30 min = 3600s)
-                const remaining = Math.max(0, Math.floor((3600 - elapsed) / 60));
-                const sm = document.getElementById('sessionMin');
-                if (sm) sm.textContent = remaining;
-                if (remaining <= 0) {
-                    window.location.href = '/admin/login';
-                }
-            }
-            updateTimer();
-            setInterval(updateTimer, 1000);
-        })();
-
-        // ── File Select Display ──
-        function handleFileSelect(input, displayId, formId, progressId) {
-            if (input.files && input.files.length > 1) {
-                document.getElementById(displayId).textContent = '📎 ' + input.files.length + ' files selected';
-            } else {
-                const name = input.files[0] ? input.files[0].name : '';
-                document.getElementById(displayId).textContent = name ? '📎 ' + name : '';
-            }
-        }
-
-        // ── Upload Progress ──
-        function startProgress(wrapId, barId) {
-            const wrap = document.getElementById(wrapId);
-            const bar = document.getElementById(barId);
-            wrap.style.display = 'block';
-            let pct = 0;
-            const iv = setInterval(() => {
-                pct += Math.random() * 18;
-                if (pct >= 90) { pct = 90; clearInterval(iv); }
-                bar.style.width = pct + '%';
-            }, 200);
-        }
-
-        // ── Selection ──
-        const selected = { image: new Set(), video: new Set() };
-
-        function toggleSelect(el, type) {
-            const file = el.dataset.file;
-            const cb = el.querySelector('.select-cb');
-            if (selected[type].has(file)) {
-                selected[type].delete(file);
-                el.classList.remove('selected');
-                cb.checked = false;
-            } else {
-                selected[type].add(file);
-                el.classList.add('selected');
-                cb.checked = true;
-            }
-            updateDeleteBtn(type);
-        }
-
-        function toggleSelectCb(cb, type) {
-            const el = cb.closest('.img-item, .vid-item');
-            const file = el.dataset.file;
-            if (cb.checked) {
-                selected[type].add(file);
-                el.classList.add('selected');
-            } else {
-                selected[type].delete(file);
-                el.classList.remove('selected');
-            }
-            updateDeleteBtn(type);
-        }
-
-        function selectAll(type) {
-            document.querySelectorAll(`[data-type="${type}"]`).forEach(el => {
-                el.classList.add('selected');
-                const cb = el.querySelector('.select-cb');
-                cb.checked = true;
-                selected[type].add(el.dataset.file);
-            });
-            updateDeleteBtn(type);
-        }
-
-        function deselectAll(type) {
-            document.querySelectorAll(`[data-type="${type}"]`).forEach(el => {
-                el.classList.remove('selected');
-                el.querySelector('.select-cb').checked = false;
-            });
-            selected[type].clear();
-            updateDeleteBtn(type);
-        }
-
-        function updateDeleteBtn(type) {
-            const count = selected[type].size;
-            const btn = document.getElementById(type === 'image' ? 'btnDeleteImages' : 'btnDeleteVideos');
-            const countEl = document.getElementById(type + 'SelectedCount');
-            if (count > 0) {
-                btn.classList.add('show');
-                btn.innerHTML = `<i class="fas fa-trash"></i> Delete ${count} file${count > 1 ? 's' : ''}`;
-                if (countEl) countEl.textContent = `${count} selected`;
-            } else {
-                btn.classList.remove('show');
-                if (countEl) countEl.textContent = '';
-            }
-        }
-
-        function confirmDelete(formId, inputsId, type) {
-            const count = selected[type].size;
-            if (count === 0) return;
-            if (!confirm(`Are you sure you want to permanently delete ${count} file${count > 1 ? 's' : ''}? This cannot be undone.`)) return;
-            const form = document.getElementById(formId);
-            const container = document.getElementById(inputsId);
-            container.innerHTML = '';
-            selected[type].forEach(file => {
-                const inp = document.createElement('input');
-                inp.type = 'hidden';
-                inp.name = 'files';
-                inp.value = file;
-                container.appendChild(inp);
-            });
-            form.submit();
-        }
-
-        // ── Drag & Drop Styling ──
-        ['imageDropZone', 'videoDropZone'].forEach(id => {
-            const zone = document.getElementById(id);
-            if (!zone) return;
-            zone.addEventListener('dragover', e => { e.preventDefault(); zone.classList.add('drag-over'); });
-            zone.addEventListener('dragleave', () => zone.classList.remove('drag-over'));
-            zone.addEventListener('drop', e => {
-                e.preventDefault(); zone.classList.remove('drag-over');
-                const input = zone.querySelector('input[type="file"]');
-                input.files = e.dataTransfer.files;
-                input.dispatchEvent(new Event('change'));
-            });
-        });
-    </script>
+    <script src="/js/admin-dashboard.js" defer></script>
 </body>
 
 </html>
