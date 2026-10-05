@@ -21,6 +21,9 @@
         cursor: pointer;
         transition: all 0.25s;
         font-family: 'Nunito', 'Heebo', sans-serif;
+        text-decoration: none;
+        display: inline-block;
+        text-transform: capitalize;
     }
     .filter-btn:hover,
     .filter-btn.active {
@@ -189,20 +192,31 @@
         <p class="text-secondary">Capturing joyful moments, creative activities & milestones</p>
     </div>
 
-    <% if (images && images.length > 0) { %>
-
-    <!-- Filter Buttons -->
+    <!-- Filter Buttons (Categories from Admin) -->
+    <% if (typeof sections !== 'undefined' && sections.length > 0) { %>
     <div class="gallery-filters wow fadeInUp" data-wow-delay="0.2s">
-        <button class="filter-btn active" onclick="filterGallery('all', this)">
-            All (<%= images.length %>)
-        </button>
-        <button class="filter-btn" onclick="filterGallery('recent', this)">Recent Uploads</button>
+        <a href="/gallery" class="filter-btn <%= !activeSection ? 'active' : '' %>">
+            All (<%= typeof totalImages !== 'undefined' ? totalImages : (images ? images.length : 0) %>)
+        </a>
+        <% sections.forEach(function(cat) { %>
+        <a href="/gallery?section=<%= cat.name %>" class="filter-btn <%= activeSection === cat.name ? 'active' : '' %>">
+            <%= cat.name.replace(/-/g, ' ') %> (<%= cat.count %>)
+        </a>
+        <% }); %>
     </div>
+    <% } %>
+
+    <% if (images && images.length > 0) { %>
 
     <!-- Masonry Grid -->
     <div class="gallery-grid" id="galleryGrid">
         <% images.forEach(function(img, idx) { %>
         <div class="gallery-item" data-index="<%= idx %>" data-delay="<%= (idx % 12) * 0.05 %>">
+            <% if (img.section) { %>
+            <span class="badge bg-dark bg-opacity-75 text-white position-absolute top-0 start-0 m-2 px-2 py-1" style="z-index: 2; font-size: 0.75rem; text-transform: capitalize;">
+                <%= img.section.replace(/-/g, ' ') %>
+            </span>
+            <% } %>
             <img src="<%= img.url %>" alt="Kualakubs gallery image <%= idx + 1 %>" loading="lazy">
             <div class="overlay">
                 <div class="overlay-icon"><i class="fas fa-search-plus"></i></div>
@@ -213,11 +227,12 @@
 
     <!-- Pagination -->
     <% if (typeof pagination !== 'undefined' && pagination.totalPages > 1) { %>
+    <% const secParam = activeSection ? ('section=' + encodeURIComponent(activeSection) + '&') : ''; %>
     <nav class="d-flex justify-content-center mt-5 wow fadeInUp" data-wow-delay="0.3s">
         <ul class="pagination pagination-purple">
             <% if (pagination.hasPrev) { %>
             <li class="page-item">
-                <a class="page-link" href="/gallery?page=<%= pagination.currentPage - 1 %>" aria-label="Previous">
+                <a class="page-link" href="/gallery?<%= secParam %>page=<%= pagination.currentPage - 1 %>" aria-label="Previous">
                     <span aria-hidden="true">&laquo;</span>
                 </a>
             </li>
@@ -229,13 +244,13 @@
             
             <% for (let i = 1; i <= pagination.totalPages; i++) { %>
             <li class="page-item <%= pagination.currentPage === i ? 'active' : '' %>">
-                <a class="page-link" href="/gallery?page=<%= i %>"><%= i %></a>
+                <a class="page-link" href="/gallery?<%= secParam %>page=<%= i %>"><%= i %></a>
             </li>
             <% } %>
             
             <% if (pagination.hasNext) { %>
             <li class="page-item">
-                <a class="page-link" href="/gallery?page=<%= pagination.currentPage + 1 %>" aria-label="Next">
+                <a class="page-link" href="/gallery?<%= secParam %>page=<%= pagination.currentPage + 1 %>" aria-label="Next">
                     <span aria-hidden="true">&raquo;</span>
                 </a>
             </li>
@@ -263,9 +278,9 @@
     <!-- Empty State -->
     <div class="empty-gallery wow fadeInUp" data-wow-delay="0.2s">
         <i class="fas fa-images"></i>
-        <h4>Gallery Coming Soon</h4>
-        <p>Our gallery is being curated. Beautiful moments will appear here soon!</p>
-        <a href="/contact" class="btn btn-primary mt-3 px-4">Contact Us</a>
+        <h4><%= activeSection ? 'No Photos In This Category Yet' : 'Gallery Coming Soon' %></h4>
+        <p><%= activeSection ? 'Photos uploaded to category "' + activeSection.replace(/-/g, ' ') + '" will appear here.' : 'Our gallery is being curated. Beautiful moments will appear here soon!' %></p>
+        <a href="<%= activeSection ? '/gallery' : '/contact' %>" class="btn btn-primary mt-3 px-4"><%= activeSection ? 'View All Photos' : 'Contact Us' %></a>
     </div>
     <% } %>
 

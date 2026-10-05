@@ -265,11 +265,11 @@ function syncGroups(type) {
   return groups;
 }
 
-/** { section: [urls] } → { section: [{filename, url}] } for the views */
+/** { section: [urls] } → { section: [{filename, url, section}] } for the views */
 function groupsToObjects(groups) {
   const out = {};
   Object.keys(groups).forEach(name => {
-    out[name] = groups[name].map(u => ({ filename: path.basename(u), url: u }));
+    out[name] = groups[name].map(u => ({ filename: path.basename(u), url: u, section: name }));
   });
   return out;
 }
@@ -367,21 +367,20 @@ app.get(['/career', '/career.html'], (req, res) =>
 // Gallery — optional filter: /gallery?section=new-year-celebration&page=2
 app.get(['/gallery', '/gallery.html'], (req, res) => {
   const groups = groupsToObjects(syncGroups('image'));
-  const sections = Object.keys(groups).map(name => ({ name, count: groups[name].length }))
-                         .filter(s => s.count > 0);
+  const sections = Object.keys(groups).map(name => ({ name, count: groups[name].length }));
 
   const requested = slugify(req.query.section);
   const activeSection = groups[requested] ? requested : '';   // '' = all
 
-  const allImages = activeSection ? groups[activeSection] : Object.values(groups).flat();
+  const allFilteredImages = activeSection ? groups[activeSection] : Object.values(groups).flat();
+  const totalImages = Object.values(groups).flat().length;
 
   const page = parseInt(req.query.page, 10) || 1;
   const limit = 12;
-  const totalImages = allImages.length;
-  const totalPages = Math.ceil(totalImages / limit) || 1;
+  const totalPages = Math.ceil(allFilteredImages.length / limit) || 1;
   const currentPage = Math.max(1, Math.min(page, totalPages));
   const startIndex = (currentPage - 1) * limit;
-  const images = allImages.slice(startIndex, startIndex + limit);
+  const images = allFilteredImages.slice(startIndex, startIndex + limit);
 
   res.render('gallery', {
     ...siteData,
@@ -390,10 +389,11 @@ app.get(['/gallery', '/gallery.html'], (req, res) => {
     images,
     sections,
     activeSection,
+    totalImages,
     pagination: {
       currentPage,
       totalPages,
-      totalImages,
+      totalImages: allFilteredImages.length,
       hasNext: currentPage < totalPages,
       hasPrev: currentPage > 1
     }
