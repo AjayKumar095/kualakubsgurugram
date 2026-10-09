@@ -564,3 +564,66 @@
         padding: 0 10px;
     }
 }
+
+/*** Centered Dandiya Event Text ***/
+.dandiya-center-container {
+    background: transparent;
+    padding: 10px 15px;
+    text-align: center;
+    position: relative;
+    z-index: 999;
+}
+
+.dandiya-center-highlight {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 8px;
+    padding: 7px 24px;
+    background: #ffffff;
+    border: 2px solid var(--primary);
+    border-radius: 50px;
+    color: var(--accent-purple);
+    font-size: 0.95rem;
+    font-weight: 600;
+    cursor: default;
+    user-select: text;
+    box-shadow: 0 2px 10px rgba(241, 152, 52, 0.2);
+    animation: dandiyaGlow 3s infinite ease-in-out;
+}
+
+@keyframes dandiyaGlow {
+    0%, 100% {
+        box-shadow: 0 2px 8px rgba(241, 152, 52, 0.15);
+    }
+    50% {
+        box-shadow: 0 2px 14px rgba(241, 152, 52, 0.35);
+    }
+}
+
+.dandiya-highlight-title {
+    color: #d81b60;
+    font-weight: 800;
+    letter-spacing: 0.3px;
+}
+
+.dandiya-center-highlight .dandiya-date {
+    font-weight: 700;
+    color: var(--primary);
+}
+
+.dandiya-center-highlight .dandiya-icon {
+    font-size: 1rem;
+}
+
+@media (max-width: 576px) {
+    .dandiya-center-container {
+        padding: 8px 10px;
+    }
+    .dandiya-center-highlight {
+        font-size: 0.84rem;
+        padding: 6px 14px;
+        gap: 6px;
+    }
+}
