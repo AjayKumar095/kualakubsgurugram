@@ -216,6 +216,16 @@ function slugify(str) {
     .slice(0, 60);
 }
 
+/** Fisher-Yates array shuffle */
+function shuffleArray(arr) {
+  const result = [...arr];
+  for (let i = result.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [result[i], result[j]] = [result[j], result[i]];
+  }
+  return result;
+}
+
 function loadGroups(file) {
   try {
     const data = JSON.parse(fs.readFileSync(file, 'utf8'));
@@ -366,14 +376,41 @@ app.get(['/career', '/career.html'], (req, res) =>
 
 // Gallery — optional filter: /gallery?section=new-year-celebration&page=2
 app.get(['/gallery', '/gallery.html'], (req, res) => {
+  res.set('Cache-Control', 'no-store, no-cache, must-revalidate, proxy-revalidate');
+
   const groups = groupsToObjects(syncGroups('image'));
   const sections = Object.keys(groups).map(name => ({ name, count: groups[name].length }));
 
   const requested = slugify(req.query.section);
   const activeSection = groups[requested] ? requested : '';   // '' = all
 
-  const allFilteredImages = activeSection ? groups[activeSection] : Object.values(groups).flat();
-  const totalImages = Object.values(groups).flat().length;
+  const allRawImages = Object.values(groups).flat();
+  const totalImages = allRawImages.length;
+
+  let allFilteredImages;
+  if (activeSection) {
+    allFilteredImages = groups[activeSection] || [];
+  } else {
+    // When "All" is active, randomize images across all categories
+    const isNewAllClick = !req.query.page;
+    const sessionShuffle = req.session && req.session.galleryShuffle;
+
+    if (!isNewAllClick && Array.isArray(sessionShuffle) && sessionShuffle.length === totalImages) {
+      // Retain the current random order while paginating through pages (page 2, page 3, etc.)
+      const imgMap = new Map(allRawImages.map(img => [img.url, img]));
+      allFilteredImages = sessionShuffle.map(url => imgMap.get(url)).filter(Boolean);
+      if (allFilteredImages.length !== totalImages) {
+        allFilteredImages = shuffleArray(allRawImages);
+        if (req.session) req.session.galleryShuffle = allFilteredImages.map(img => img.url);
+      }
+    } else {
+      // Whenever "All" is clicked (or new visit), generate a fresh random order
+      allFilteredImages = shuffleArray(allRawImages);
+      if (req.session) {
+        req.session.galleryShuffle = allFilteredImages.map(img => img.url);
+      }
+    }
+  }
 
   const page = parseInt(req.query.page, 10) || 1;
   const limit = 12;
