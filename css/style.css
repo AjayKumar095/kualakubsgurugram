@@ -584,33 +584,37 @@
     background: #ffffff;
     border: 2px solid var(--primary);
     border-radius: 50px;
-    color: var(--accent-purple);
+    color: #d32f2f;
     font-size: 0.95rem;
     font-weight: 600;
     cursor: default;
     user-select: text;
     box-shadow: 0 2px 10px rgba(241, 152, 52, 0.2);
-    animation: dandiyaGlow 3s infinite ease-in-out;
+    animation: dandiyaPopBlink 1.4s infinite ease-in-out;
 }
 
-@keyframes dandiyaGlow {
+@keyframes dandiyaPopBlink {
     0%, 100% {
-        box-shadow: 0 2px 8px rgba(241, 152, 52, 0.15);
+        transform: scale(1);
+        border-color: var(--primary);
+        box-shadow: 0 2px 10px rgba(241, 152, 52, 0.25);
     }
     50% {
-        box-shadow: 0 2px 14px rgba(241, 152, 52, 0.35);
+        transform: scale(1.05);
+        border-color: #d32f2f;
+        box-shadow: 0 0 20px rgba(211, 47, 47, 0.5), 0 4px 16px rgba(241, 152, 52, 0.35);
     }
 }
 
 .dandiya-highlight-title {
-    color: #d81b60;
+    color: #d32f2f;
     font-weight: 800;
     letter-spacing: 0.3px;
 }
 
 .dandiya-center-highlight .dandiya-date {
     font-weight: 700;
-    color: var(--primary);
+    color: #d32f2f;
 }
 
 .dandiya-center-highlight .dandiya-icon {
