@@ -631,3 +631,188 @@
         gap: 6px;
     }
 }
+
+/*** Video Testimonials Carousel ***/
+.video-carousel {
+    position: relative;
+    padding: 0;
+}
+.video-carousel .owl-stage {
+    display: flex;
+    align-items: stretch;
+}
+.video-carousel .owl-item {
+    display: flex;
+    flex-direction: column;
+}
+.video-carousel .owl-nav {
+    position: static;
+    margin: 0;
+}
+.video-carousel .owl-nav .owl-prev,
+.video-carousel .owl-nav .owl-next {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 46px;
+    height: 46px;
+    border-radius: 50% !important;
+    display: inline-flex !important;
+    align-items: center;
+    justify-content: center;
+    background: #ffffff !important;
+    color: var(--primary, #3d064b) !important;
+    box-shadow: 0 4px 16px rgba(61, 6, 75, 0.22) !important;
+    border: 1.5px solid rgba(61, 6, 75, 0.12) !important;
+    font-size: 1.3rem !important;
+    transition: all 0.25s ease;
+    z-index: 10;
+    cursor: pointer;
+}
+.video-carousel .owl-nav .owl-prev {
+    left: -23px;
+}
+.video-carousel .owl-nav .owl-next {
+    right: -23px;
+}
+.video-carousel .owl-nav .owl-prev:hover,
+.video-carousel .owl-nav .owl-next:hover {
+    background: var(--primary, #3d064b) !important;
+    color: #ffffff !important;
+    box-shadow: 0 8px 24px rgba(61, 6, 75, 0.35) !important;
+    transform: translateY(-50%) scale(1.08);
+}
+@media (max-width: 991px) {
+    .video-carousel .owl-nav .owl-prev {
+        left: -12px;
+    }
+    .video-carousel .owl-nav .owl-next {
+        right: -12px;
+    }
+}
+@media (max-width: 576px) {
+    .video-carousel .owl-nav .owl-prev {
+        left: -6px;
+        width: 38px;
+        height: 38px;
+        font-size: 1.1rem !important;
+    }
+    .video-carousel .owl-nav .owl-next {
+        right: -6px;
+        width: 38px;
+        height: 38px;
+        font-size: 1.1rem !important;
+    }
+}
+.video-carousel .owl-dots {
+    display: none !important;
+}
+
+/* ── Video Category Filter Selector ── */
+.video-category-filters {
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-bottom: 2.2rem;
+}
+.video-filter-btn {
+    padding: 8px 22px;
+    border-radius: 30px;
+    border: 2px solid #e0d5eb;
+    background: #ffffff;
+    color: #6c5b7b;
+    font-weight: 700;
+    font-size: 0.88rem;
+    cursor: pointer;
+    transition: all 0.25s ease;
+    text-transform: capitalize;
+    font-family: 'Nunito', 'Heebo', sans-serif;
+    outline: none;
+    box-shadow: 0 2px 8px rgba(61, 6, 75, 0.05);
+}
+.video-filter-btn:hover {
+    border-color: var(--primary, #3d064b);
+    color: var(--primary, #3d064b);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(61, 6, 75, 0.12);
+}
+.video-filter-btn.active {
+    background: var(--primary, #3d064b);
+    border-color: var(--primary, #3d064b);
+    color: #ffffff;
+    box-shadow: 0 4px 16px rgba(61, 6, 75, 0.25);
+}
+
+/* ── Video Category Badge Pill (Elegant Brand Pill) ── */
+.video-cat-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 6px 14px 6px 8px;
+    border-radius: 50px;
+    font-size: 0.8rem;
+    font-weight: 700;
+    text-transform: capitalize;
+    letter-spacing: 0.3px;
+    color: #3d064b;
+    background: linear-gradient(135deg, rgba(241, 152, 52, 0.12) 0%, rgba(61, 6, 75, 0.08) 100%);
+    border: 1px solid rgba(241, 152, 52, 0.32);
+    box-shadow: 0 2px 8px rgba(61, 6, 75, 0.04);
+    transition: all 0.25s ease;
+    line-height: 1.2;
+}
+.video-cat-badge .cat-icon {
+    width: 22px;
+    height: 22px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, #f19834, #d47b18);
+    color: #ffffff;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.65rem;
+    box-shadow: 0 2px 5px rgba(241, 152, 52, 0.35);
+}
+.video-cat-badge:hover {
+    background: linear-gradient(135deg, rgba(241, 152, 52, 0.18) 0%, rgba(61, 6, 75, 0.12) 100%);
+    border-color: #f19834;
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(241, 152, 52, 0.2);
+}
+
+/* Video card overlay badge on top of player */
+.video-overlay-badge {
+    position: absolute;
+    top: 12px;
+    left: 12px;
+    z-index: 2;
+    pointer-events: none;
+}
+.video-overlay-badge span {
+    background: rgba(26, 0, 32, 0.82);
+    color: #ffba00;
+    font-size: 0.74rem;
+    font-weight: 700;
+    padding: 5px 13px 5px 8px;
+    border-radius: 50px;
+    backdrop-filter: blur(6px);
+    text-transform: capitalize;
+    letter-spacing: 0.3px;
+    box-shadow: 0 3px 10px rgba(0, 0, 0, 0.3);
+    border: 1px solid rgba(255, 186, 0, 0.3);
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+}
+.video-overlay-badge .cat-icon-dark {
+    width: 18px;
+    height: 18px;
+    border-radius: 50%;
+    background: #ffba00;
+    color: #24022e;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.62rem;
+}

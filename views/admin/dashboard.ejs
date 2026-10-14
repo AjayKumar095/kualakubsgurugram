@@ -804,12 +804,43 @@
                                 </div>
                                 <div class="file-name-display" id="videoFileName"></div>
                             </div>
+
+                            <!-- Optional Testimonial Text & Author -->
+                            <div class="video-testimonial-fields" style="margin-top: 18px; padding: 18px; background: #faf8fc; border: 1.5px dashed #ded4e8; border-radius: 12px;">
+                                <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px;">
+                                    <div style="font-weight: 700; font-size: 0.95rem; color: #3d064b; display: flex; align-items: center; gap: 8px;">
+                                        <i class="fas fa-comment-dots text-warning"></i>
+                                        <span>Testimonial Text Below Video</span>
+                                    </div>
+                                    <span style="font-size: 0.75rem; background: #ede7f6; color: #5e35b1; padding: 3px 10px; border-radius: 20px; font-weight: 600;">Optional</span>
+                                </div>
+                                <div style="margin-bottom: 12px;">
+                                    <label for="videoTestimonial" style="display: block; font-size: 0.82rem; font-weight: 600; color: #555; margin-bottom: 5px;">
+                                        Testimonial / Review / Quote:
+                                    </label>
+                                    <textarea name="testimonial" id="videoTestimonial" rows="3"
+                                        placeholder="e.g. Our daughter loves going to Kualakubs every day. The teachers are so caring and supportive!"
+                                        style="width: 100%; padding: 10px 14px; border: 1px solid #d3c7de; border-radius: 8px; font-size: 0.88rem; outline: none; transition: border-color 0.2s; background: #fff;"></textarea>
+                                </div>
+                                <div>
+                                    <label for="videoAuthor" style="display: block; font-size: 0.82rem; font-weight: 600; color: #555; margin-bottom: 5px;">
+                                        Parent / Student Name:
+                                    </label>
+                                    <input type="text" name="author" id="videoAuthor" maxlength="80"
+                                        placeholder="e.g. Mrs. Priya Sharma (Parent)"
+                                        style="width: 100%; padding: 9px 14px; border: 1px solid #d3c7de; border-radius: 8px; font-size: 0.88rem; outline: none; transition: border-color 0.2s; background: #fff;">
+                                </div>
+                                <div style="font-size: 0.75rem; color: #888; margin-top: 6px;">
+                                    <i class="fas fa-info-circle me-1"></i> You can leave this blank if you only want to display the video.
+                                </div>
+                            </div>
+
                             <div class="progress-wrap" id="videoProgressWrap">
                                 <div class="progress">
                                     <div class="progress-bar" id="videoProgressBar" style="width:0%"></div>
                                 </div>
                             </div>
-                            <button type="submit" class="btn-upload">
+                            <button type="submit" class="btn-upload" style="margin-top: 18px;">
                                 <i class="fas fa-upload me-2"></i>Upload Video
                             </button>
                         </form>
@@ -905,12 +936,36 @@
                                                 <div class="vid-item media-item" data-type="video"
                                                     data-section="<%= section %>" data-file="<%= vid.filename %>">
                                                     <input type="checkbox" class="select-cb">
-                                                    <video muted preload="metadata">
+                                                    <video muted preload="none">
                                                         <source src="<%= vid.url %>" type="video/mp4">
                                                     </video>
                                                     <div class="vid-footer">
                                                         <div class="vid-name" title="<%= vid.filename %>"><%= vid.filename %></div>
                                                         <div class="vid-badge"><%= vid.filename.split('.').pop().toUpperCase() %></div>
+                                                    </div>
+                                                    <% if (vid.testimonial || vid.author) { %>
+                                                        <div class="vid-testimonial-preview" style="padding: 8px 12px; background: rgba(255,255,255,0.06); border-top: 1px solid rgba(255,255,255,0.08); font-size: 0.78rem; color: #eed7fb;">
+                                                            <% if (vid.testimonial) { %>
+                                                                <div style="font-style: italic; display: -webkit-box; -webkit-line-clamp: 2; line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; margin-bottom: 4px;">
+                                                                    <i class="fas fa-quote-left me-1 opacity-50"></i><%= vid.testimonial %>
+                                                                </div>
+                                                            <% } %>
+                                                            <% if (vid.author) { %>
+                                                                <div style="font-weight: 600; color: #ffba00; font-size: 0.72rem;">
+                                                                    — <%= vid.author %>
+                                                                </div>
+                                                            <% } %>
+                                                        </div>
+                                                    <% } %>
+                                                    <div class="vid-actions" style="padding: 6px 10px 10px; display: flex; justify-content: flex-end; background: #1a0020;">
+                                                        <button type="button" class="btn-sm-action btn-edit-testimonial" 
+                                                            data-action="edit-testimonial" 
+                                                            data-file="<%= vid.filename %>" 
+                                                            data-text="<%= (vid.testimonial || '').replace(/"/g, '&quot;') %>"
+                                                            data-author="<%= (vid.author || '').replace(/"/g, '&quot;') %>"
+                                                            style="padding: 4px 10px; font-size: 0.73rem; border-radius: 6px; background: rgba(255,186,0,0.18); color: #ffba00; border: 1px solid rgba(255,186,0,0.3); cursor: pointer; display: inline-flex; align-items: center; gap: 5px;">
+                                                            <i class="fas fa-comment-dots"></i> <%= (vid.testimonial || vid.author) ? 'Edit Text' : '+ Add Testimonial Text' %>
+                                                        </button>
                                                     </div>
                                                 </div>
                                             <% }); %>
@@ -932,6 +987,52 @@
 
         </div><!-- /content -->
     </div><!-- /main-wrap -->
+
+    <!-- Edit Testimonial Modal -->
+    <div id="testimonialModal" style="display:none; position:fixed; inset:0; background:rgba(0,0,0,0.65); z-index:9999; align-items:center; justify-content:center; padding:15px; backdrop-filter:blur(3px);">
+        <div style="background:#fff; border-radius:16px; width:100%; max-width:520px; overflow:hidden; box-shadow:0 20px 40px rgba(0,0,0,0.3);">
+            <div style="background:linear-gradient(135deg, #3d064b, #6a1b7a); color:#fff; padding:18px 24px; display:flex; align-items:center; justify-content:space-between;">
+                <h3 style="margin:0; font-size:1.1rem; font-weight:700; color:#fff; display:flex; align-items:center; gap:8px;">
+                    <i class="fas fa-comment-dots text-warning"></i> Video Testimonial Text
+                </h3>
+                <button type="button" id="closeTestimonialModal" style="background:transparent; border:none; color:#fff; font-size:1.2rem; cursor:pointer; opacity:0.8; padding:4px 8px;">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <form method="POST" action="/admin/video/testimonial" id="testimonialEditForm" style="padding:22px 24px;">
+                <input type="hidden" name="filename" id="modalVideoFilename">
+                
+                <div style="margin-bottom:14px;">
+                    <label style="display:block; font-size:0.78rem; font-weight:700; color:#555; text-transform:uppercase; margin-bottom:4px;">Video File</label>
+                    <div id="modalVideoFilenameDisplay" style="font-size:0.82rem; font-family:monospace; background:#f4eff7; padding:8px 12px; border-radius:8px; color:#3d064b; word-break:break-all;"></div>
+                </div>
+
+                <div style="margin-bottom:14px;">
+                    <label for="modalTestimonialText" style="display:block; font-size:0.88rem; font-weight:600; color:#333; margin-bottom:6px;">
+                        Testimonial Text / Caption <span style="font-size:0.75rem; color:#888; font-weight:normal;">(Optional)</span>
+                    </label>
+                    <textarea name="testimonial" id="modalTestimonialText" rows="4" class="form-control"
+                        placeholder="Enter what the parent or student said..."
+                        style="width:100%; padding:10px 14px; border:1.5px solid #dcd3e4; border-radius:10px; font-size:0.9rem; resize:vertical; outline:none;"></textarea>
+                    <small style="color:#777; font-size:0.75rem;">Clear this text to remove the caption from below the video.</small>
+                </div>
+
+                <div style="margin-bottom:20px;">
+                    <label for="modalAuthorText" style="display:block; font-size:0.88rem; font-weight:600; color:#333; margin-bottom:6px;">
+                        Parent / Student Name <span style="font-size:0.75rem; color:#888; font-weight:normal;">(Optional)</span>
+                    </label>
+                    <input type="text" name="author" id="modalAuthorText" maxlength="80" class="form-control"
+                        placeholder="e.g. Mrs. Sharma (Parent of Aarav)"
+                        style="width:100%; padding:10px 14px; border:1.5px solid #dcd3e4; border-radius:10px; font-size:0.9rem; outline:none;">
+                </div>
+
+                <div style="display:flex; justify-content:flex-end; gap:10px; border-top:1px solid #eee; padding-top:16px;">
+                    <button type="button" id="cancelTestimonialModal" class="btn-sm-action btn-deselect" style="padding:8px 18px; border-radius:8px; cursor:pointer;">Cancel</button>
+                    <button type="submit" class="btn-sm-action btn-select-all" style="padding:8px 20px; border-radius:8px; background:#3d064b; color:#fff; cursor:pointer; font-weight:600;">Save Changes</button>
+                </div>
+            </form>
+        </div>
+    </div>
 
     <script src="/js/admin-dashboard.js" defer></script>
 </body>

@@ -56,14 +56,27 @@ const logDir = path.join(__dirname, 'logs');
 if (!fs.existsSync(logDir)) {
   fs.mkdirSync(logDir);
 }
-app.use(morgan('dev'));
-const accessLogStream = fs.createWriteStream(path.join(logDir, 'access.log'), { flags: 'a' });
-app.use(morgan('combined', { stream: accessLogStream }));
+if (process.env.NODE_ENV === 'production') {
+  const accessLogStream = fs.createWriteStream(path.join(logDir, 'access.log'), { flags: 'a' });
+  app.use(morgan('combined', { stream: accessLogStream }));
+} else {
+  app.use(morgan('dev'));
+}
 
-app.use('/css', express.static(path.join(__dirname, 'css')));
-app.use('/js', express.static(path.join(__dirname, 'js')));
-app.use('/assests', express.static(path.join(__dirname, 'assests')));
-app.use('/lib', express.static(path.join(__dirname, 'lib')));
+// ─── Static Assets with Browser & CDN Caching ─────────────────────────────────
+const isProd = process.env.NODE_ENV === 'production';
+const staticOptions = {
+  maxAge: isProd ? '7d' : '1h',
+  etag: true,
+  lastModified: true
+};
+
+app.use('/css', express.static(path.join(__dirname, 'css'), staticOptions));
+app.use('/js', express.static(path.join(__dirname, 'js'), staticOptions));
+app.use('/assests', express.static(path.join(__dirname, 'assests'), staticOptions));
+app.use('/lib', express.static(path.join(__dirname, 'lib'), staticOptions));
+app.use('/public', express.static(path.join(__dirname, 'public'), staticOptions));
+app.use(express.static(path.join(__dirname), { index: false, ...staticOptions }));
 
 // ─── Directories ─────────────────────────────────────────────────────────────
 const IMAGES_DIR = path.join(__dirname, 'assests', 'uploads', 'images');
@@ -73,6 +86,7 @@ const DATA_DIR   = path.join(__dirname, 'data');
 
 const IMAGES_JSON = path.join(DATA_DIR, 'images.json');
 const VIDEOS_JSON = path.join(DATA_DIR, 'videos.json');
+const VIDEO_TESTIMONIALS_JSON = path.join(DATA_DIR, 'video_testimonials.json');
 
 // ─── View Engine ─────────────────────────────────────────────────────────────
 app.set('view engine', 'ejs');
@@ -97,9 +111,6 @@ app.use(session({
 
 // ─── Flash Messages ───────────────────────────────────────────────────────────
 app.use(flash());
-
-// ─── Static Assets ───────────────────────────────────────────────────────────
-app.use(express.static(path.join(__dirname), { index: false }));
 
 // ─── Admin Credentials (env or hardcoded fallback) ────────────────────────────
 const ADMIN_USER = process.env.ADMIN_USER || 'admin';
@@ -234,11 +245,38 @@ function loadGroups(file) {
   return {};
 }
 
+// ─── High-Performance In-Memory Media Cache ──────────────────────────────────
+// Prevents slow synchronous fs.readdirSync and fs.readFileSync calls on every page load
+const mediaCache = {
+  video: null,
+  image: null,
+};
+
+function invalidateMediaCache(type) {
+  if (type) {
+    mediaCache[type] = null;
+  } else {
+    mediaCache.video = null;
+    mediaCache.image = null;
+  }
+}
+
+function getCachedGroups(type) {
+  if (mediaCache[type]) {
+    return mediaCache[type];
+  }
+  const groups = syncGroups(type);
+  const objects = groupsToObjects(groups, type);
+  mediaCache[type] = objects;
+  return objects;
+}
+
 /** Atomic write: write temp file then rename, so a crash can't corrupt the JSON. */
 function saveGroups(file, data) {
   const tmp = file + '.tmp';
   fs.writeFileSync(tmp, JSON.stringify(data, null, 2), 'utf8');
   fs.renameSync(tmp, file);
+  invalidateMediaCache();
 }
 
 /**
@@ -275,11 +313,39 @@ function syncGroups(type) {
   return groups;
 }
 
-/** { section: [urls] } → { section: [{filename, url, section}] } for the views */
-function groupsToObjects(groups) {
+function loadVideoTestimonials() {
+  try {
+    if (fs.existsSync(VIDEO_TESTIMONIALS_JSON)) {
+      const data = JSON.parse(fs.readFileSync(VIDEO_TESTIMONIALS_JSON, 'utf8'));
+      if (data && typeof data === 'object' && !Array.isArray(data)) return data;
+    }
+  } catch { /* missing or empty */ }
+  return {};
+}
+
+function saveVideoTestimonials(data) {
+  const tmp = VIDEO_TESTIMONIALS_JSON + '.tmp';
+  fs.writeFileSync(tmp, JSON.stringify(data, null, 2), 'utf8');
+  fs.renameSync(tmp, VIDEO_TESTIMONIALS_JSON);
+  invalidateMediaCache('video');
+}
+
+/** { section: [urls] } → { section: [{filename, url, section, testimonial, author}] } for the views */
+function groupsToObjects(groups, type) {
+  const isVideo = type === 'video';
+  const testimonials = isVideo ? loadVideoTestimonials() : null;
   const out = {};
   Object.keys(groups).forEach(name => {
-    out[name] = groups[name].map(u => ({ filename: path.basename(u), url: u, section: name }));
+    out[name] = groups[name].map(u => {
+      const filename = path.basename(u);
+      const item = { filename, url: u, section: name };
+      if (isVideo) {
+        const meta = (testimonials && (testimonials[filename] || testimonials[u])) || {};
+        item.testimonial = (typeof meta === 'string' ? meta : meta.text) || '';
+        item.author = meta.author || '';
+      }
+      return item;
+    });
   });
   return out;
 }
@@ -305,6 +371,7 @@ function addToSection(type, section, urls) {
   }
   groups[section] = (groups[section] || []).concat(urls);
   saveGroups(cfg.json, groups);
+  invalidateMediaCache(type);
 }
 
 // ─── Shared Site Data ─────────────────────────────────────────────────────────
@@ -333,8 +400,8 @@ const siteData = {
 
 // ─── Public View Controllers ──────────────────────────────────────────────────
 app.get(['/', '/index.html'], (req, res) => {
-  const videoGroups = groupsToObjects(syncGroups('video'));
-  const videos = Object.values(videoGroups).flat();   // flat list (backward compatible)
+  const videoGroups = getCachedGroups('video');
+  const videos = shuffleArray(Object.values(videoGroups).flat());   // flat list shuffled across all sections
   res.render('index', { ...siteData, currentPath: req.path, pageTitle: 'Home', videos, videoGroups });
 });
 
@@ -347,8 +414,11 @@ app.get(['/courses', '/courses.html'], (req, res) =>
 app.get(['/team', '/team.html'], (req, res) =>
   res.render('team', { ...siteData, currentPath: req.path, pageTitle: 'Our Team' }));
 
-app.get(['/testimonial', '/testimonial.html'], (req, res) =>
-  res.render('testimonial', { ...siteData, currentPath: req.path, pageTitle: 'Testimonial' }));
+app.get(['/testimonial', '/testimonial.html'], (req, res) => {
+  const videoGroups = getCachedGroups('video');
+  const videos = shuffleArray(Object.values(videoGroups).flat());   // flat list shuffled across all sections
+  res.render('testimonial', { ...siteData, currentPath: req.path, pageTitle: 'Testimonial', videos, videoGroups });
+});
 
 app.get(['/contact', '/contact.html'], (req, res) =>
   res.render('contact', { ...siteData, currentPath: req.path, pageTitle: 'Contact Us' }));
@@ -378,7 +448,7 @@ app.get(['/career', '/career.html'], (req, res) =>
 app.get(['/gallery', '/gallery.html'], (req, res) => {
   res.set('Cache-Control', 'no-store, no-cache, must-revalidate, proxy-revalidate');
 
-  const groups = groupsToObjects(syncGroups('image'));
+  const groups = getCachedGroups('image');
   const sections = Object.keys(groups).map(name => ({ name, count: groups[name].length }));
 
   const requested = slugify(req.query.section);
@@ -465,8 +535,8 @@ app.get('/admin/logout', (req, res) => {
 
 // ─── Admin — Dashboard ────────────────────────────────────────────────────────
 app.get('/admin', requireAuth, (req, res) => {
-  const imageGroups = groupsToObjects(syncGroups('image'));
-  const videoGroups = groupsToObjects(syncGroups('video'));
+  const imageGroups = groupsToObjects(syncGroups('image'), 'image');
+  const videoGroups = groupsToObjects(syncGroups('video'), 'video');
   const images = Object.values(imageGroups).flat();
   const videos = Object.values(videoGroups).flat();
 
@@ -588,10 +658,43 @@ app.post('/admin/upload/video', requireAuth, (req, res) => {
       req.flash('error', 'Please choose a section or create a new one.');
       return res.redirect('/admin#videos');
     }
-    addToSection('video', section, ['/assests/uploads/videos/' + req.file.filename]);
+    const filename = req.file.filename;
+    addToSection('video', section, ['/assests/uploads/videos/' + filename]);
+
+    // Save optional testimonial text and author (not compulsory)
+    const text = (req.body.testimonial || req.body.testimonial_text || '').trim();
+    const author = (req.body.author || req.body.testimonial_author || '').trim();
+    if (text || author) {
+      const tData = loadVideoTestimonials();
+      tData[filename] = { text, author };
+      saveVideoTestimonials(tData);
+    }
+
     req.flash('success', `Video "${req.file.originalname}" uploaded to "${section}".`);
     res.redirect('/admin#videos');
   });
+});
+
+// ─── Admin — Update Video Testimonial ─────────────────────────────────────────
+app.post('/admin/video/testimonial', requireAuth, (req, res) => {
+  const filename = path.basename(req.body.filename || '');
+  if (!filename) {
+    req.flash('error', 'Video filename is required.');
+    return res.redirect('/admin#videos');
+  }
+  const text = (req.body.testimonial || req.body.testimonial_text || '').trim();
+  const author = (req.body.author || req.body.testimonial_author || '').trim();
+
+  const tData = loadVideoTestimonials();
+  if (text || author) {
+    tData[filename] = { text, author };
+  } else {
+    delete tData[filename];
+    delete tData['/assests/uploads/videos/' + filename];
+  }
+  saveVideoTestimonials(tData);
+  req.flash('success', 'Testimonial text updated.');
+  res.redirect('/admin#videos');
 });
 
 // ─── Admin — Move files to another section ────────────────────────────────────
@@ -633,7 +736,22 @@ app.post('/admin/delete', requireAuth, (req, res) => {
     } catch { errors++; }
   });
 
+  if (type === 'video') {
+    const tData = loadVideoTestimonials();
+    let tChanged = false;
+    names.forEach(name => {
+      const safe = path.basename(name);
+      if (tData[safe] || tData['/assests/uploads/videos/' + safe]) {
+        delete tData[safe];
+        delete tData['/assests/uploads/videos/' + safe];
+        tChanged = true;
+      }
+    });
+    if (tChanged) saveVideoTestimonials(tData);
+  }
+
   syncGroups(type);                            // drops deleted paths from the JSON
+  invalidateMediaCache(type);
 
   if (errors) {
     req.flash('error', `Deleted ${deleted} file(s). ${errors} could not be deleted.`);
