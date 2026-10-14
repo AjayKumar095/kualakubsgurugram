@@ -164,6 +164,25 @@
           itemsOf(type, actionEl.dataset.section).forEach(function (it) { setSelected(it, type, true); });
           updateSelectionUI(type);
           return;
+        case 'edit-testimonial':
+          e.preventDefault();
+          e.stopPropagation();
+          var file = actionEl.dataset.file;
+          var text = actionEl.dataset.text || '';
+          var author = actionEl.dataset.author || '';
+          var modal = document.getElementById('testimonialModal');
+          var fnInput = document.getElementById('modalVideoFilename');
+          var fnDisplay = document.getElementById('modalVideoFilenameDisplay');
+          var txtInput = document.getElementById('modalTestimonialText');
+          var authInput = document.getElementById('modalAuthorText');
+          if (modal && fnInput && txtInput && authInput) {
+            fnInput.value = file;
+            if (fnDisplay) fnDisplay.textContent = file;
+            txtInput.value = text;
+            authInput.value = author;
+            modal.style.display = 'flex';
+          }
+          return;
         case 'delete-selected':
           deleteSelected(type);
           return;
@@ -173,6 +192,13 @@
       }
     }
 
+    // close testimonial modal
+    if (t.closest('#closeTestimonialModal') || t.closest('#cancelTestimonialModal') || t.id === 'testimonialModal') {
+      var modalEl = document.getElementById('testimonialModal');
+      if (modalEl) modalEl.style.display = 'none';
+      return;
+    }
+
     // tab buttons (pills + sidebar)
     var tabEl = t.closest('[data-tab]');
     if (tabEl) { e.preventDefault(); showTab(tabEl.dataset.tab); return; }
@@ -180,10 +206,21 @@
     // media item select / deselect
     var item = t.closest('.media-item');
     if (item) {
+      if (t.closest('[data-action="edit-testimonial"]') || t.closest('.btn-edit-testimonial') || t.closest('button')) {
+        return;
+      }
       var itemType = item.dataset.type;
       var on = t.classList.contains('select-cb') ? t.checked : !selected[itemType].has(item.dataset.file);
       setSelected(item, itemType, on);
       updateSelectionUI(itemType);
+    }
+  });
+
+  // ── Keyboard delegation (e.g. Esc to close modal) ──────────────────────────
+  document.addEventListener('keydown', function (e) {
+    if (e.key === 'Escape') {
+      var m = document.getElementById('testimonialModal');
+      if (m && m.style.display === 'flex') m.style.display = 'none';
     }
   });
 
