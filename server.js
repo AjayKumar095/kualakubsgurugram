@@ -279,11 +279,36 @@ function saveGroups(file, data) {
   invalidateMediaCache();
 }
 
+function fileExistsForUrl(u) {
+  try {
+    if (!u || typeof u !== 'string') return false;
+    const cleanUrl = u.split('?')[0];
+    if (cleanUrl.startsWith('/public/')) {
+      const relPath = cleanUrl.replace(/^\/public\//, '');
+      return fs.existsSync(path.join(__dirname, 'public', relPath)) ||
+             fs.existsSync(path.join(__dirname, 'public', decodeURIComponent(relPath)));
+    }
+    if (cleanUrl.startsWith('/assests/uploads/images/')) {
+      const filename = path.basename(cleanUrl);
+      return fs.existsSync(path.join(IMAGES_DIR, filename)) ||
+             fs.existsSync(path.join(IMAGES_DIR, decodeURIComponent(filename)));
+    }
+    if (cleanUrl.startsWith('/assests/uploads/videos/')) {
+      const filename = path.basename(cleanUrl);
+      return fs.existsSync(path.join(VIDEOS_DIR, filename)) ||
+             fs.existsSync(path.join(VIDEOS_DIR, decodeURIComponent(filename)));
+    }
+  } catch {
+    return false;
+  }
+  return false;
+}
+
 /**
  * Load a type's JSON and reconcile it with the files actually on disk:
  *  - paths whose file no longer exists are dropped
- *  - files on disk that aren't in any section go to "uncategorized"
- *    (covers everything uploaded before this feature existed)
+ *  - subdirectories in public/ with images are automatically scanned as categories
+ *  - files on disk in uploads that aren't in any section go to "uncategorized"
  */
 function syncGroups(type) {
   const cfg = MEDIA[type];
@@ -294,9 +319,46 @@ function syncGroups(type) {
 
   Object.keys(groups).forEach(name => {
     if (!Array.isArray(groups[name])) { groups[name] = []; changed = true; return; }
-    const kept = groups[name].filter(u => urls.has(u));
+    const kept = groups[name].filter(u => urls.has(u) || fileExistsForUrl(u));
     if (kept.length !== groups[name].length) { groups[name] = kept; changed = true; }
   });
+
+  // Automatically scan subdirectories in public/ for image categories (e.g. annual-day, sports-day)
+  if (type === 'image') {
+    try {
+      const publicDir = path.join(__dirname, 'public');
+      if (fs.existsSync(publicDir)) {
+        const entries = fs.readdirSync(publicDir, { withFileTypes: true });
+        const allListedUrls = new Set(Object.values(groups).flat());
+
+        entries.forEach(entry => {
+          if (entry.isDirectory() && entry.name !== 'icons') {
+            const catName = slugify(entry.name);
+            const catDirPath = path.join(publicDir, entry.name);
+            const catFiles = fs.readdirSync(catDirPath)
+              .filter(f => cfg.exts.includes(path.extname(f).toLowerCase()))
+              .map(f => `/public/${entry.name}/${f}`);
+
+            if (catFiles.length > 0) {
+              if (!groups[catName]) {
+                groups[catName] = [];
+                changed = true;
+              }
+              const existingUrls = new Set(groups[catName]);
+              const newFiles = catFiles.filter(u => !existingUrls.has(u) && !allListedUrls.has(u));
+              if (newFiles.length > 0) {
+                groups[catName] = groups[catName].concat(newFiles);
+                newFiles.forEach(u => allListedUrls.add(u));
+                changed = true;
+              }
+            }
+          }
+        });
+      }
+    } catch (e) {
+      console.error('Error scanning public folders:', e.message);
+    }
+  }
 
   const listed = new Set(Object.values(groups).flat());
   const orphans = onDisk.filter(f => !listed.has(f.url)).map(f => f.url);
@@ -449,7 +511,14 @@ app.get(['/gallery', '/gallery.html'], (req, res) => {
   res.set('Cache-Control', 'no-store, no-cache, must-revalidate, proxy-revalidate');
 
   const groups = getCachedGroups('image');
-  const sections = Object.keys(groups).map(name => ({ name, count: groups[name].length }));
+  const sections = Object.keys(groups)
+    .filter(name => groups[name].length > 0)
+    .sort((a, b) => {
+      if (a === DEFAULT_SECTION) return 1;
+      if (b === DEFAULT_SECTION) return -1;
+      return a.localeCompare(b);
+    })
+    .map(name => ({ name, count: groups[name].length }));
 
   const requested = slugify(req.query.section);
   const activeSection = groups[requested] ? requested : '';   // '' = all
@@ -709,7 +778,12 @@ app.post('/admin/move', requireAuth, (req, res) => {
     req.flash('error', 'Select files and a target section.');
     return res.redirect('/admin#' + cfg.hash);
   }
-  const urls = names.map(n => '/assests/uploads/' + cfg.folder + '/' + n);
+  const currentGroups = syncGroups(type);
+  const allUrls = Object.values(currentGroups).flat();
+  const urls = names.map(n => {
+    const existing = allUrls.find(u => path.basename(u) === n);
+    return existing || ('/assests/uploads/' + cfg.folder + '/' + n);
+  });
   addToSection(type, target, urls);
   req.flash('success', `${urls.length} file(s) moved to "${target}".`);
   res.redirect('/admin#' + cfg.hash);
@@ -731,9 +805,27 @@ app.post('/admin/delete', requireAuth, (req, res) => {
   names.forEach(name => {
     const safe = path.basename(name);          // strip path traversal
     const full = path.join(cfg.dir, safe);
-    try {
-      if (fs.existsSync(full)) { fs.unlinkSync(full); deleted++; }
-    } catch { errors++; }
+    if (fs.existsSync(full)) {
+      try { fs.unlinkSync(full); deleted++; } catch { errors++; }
+    } else {
+      let found = false;
+      try {
+        const publicDir = path.join(__dirname, 'public');
+        const entries = fs.readdirSync(publicDir, { withFileTypes: true });
+        for (const entry of entries) {
+          if (entry.isDirectory() && entry.name !== 'icons') {
+            const pubPath = path.join(publicDir, entry.name, safe);
+            if (fs.existsSync(pubPath)) {
+              fs.unlinkSync(pubPath);
+              deleted++;
+              found = true;
+              break;
+            }
+          }
+        }
+      } catch { errors++; }
+      if (!found) errors++;
+    }
   });
 
   if (type === 'video') {

@@ -212,7 +212,7 @@
     <div class="gallery-grid" id="galleryGrid">
         <% images.forEach(function(img, idx) { %>
         <div class="gallery-item" data-index="<%= idx %>" data-delay="<%= (idx % 12) * 0.05 %>">
-            <% if (img.section) { %>
+            <% if (img.section && img.section !== 'uncategorized') { %>
             <span class="badge bg-dark bg-opacity-75 text-white position-absolute top-0 start-0 m-2 px-2 py-1" style="z-index: 2; font-size: 0.75rem; text-transform: capitalize;">
                 <%= img.section.replace(/-/g, ' ') %>
             </span>
@@ -264,10 +264,10 @@
     <% } %>
 
     <!-- Lightbox -->
-    <div class="lightbox" id="lightbox" onclick="closeLightboxOnBg(event)">
-        <button class="lb-close" onclick="closeLightbox()"><i class="fas fa-times"></i></button>
-        <button class="lb-nav lb-prev" onclick="lbNav(-1)"><i class="fas fa-chevron-left"></i></button>
-        <button class="lb-nav lb-next" onclick="lbNav(1)"><i class="fas fa-chevron-right"></i></button>
+    <div class="lightbox" id="lightbox">
+        <button class="lb-close" id="lbCloseBtn" type="button" aria-label="Close lightbox"><i class="fas fa-times"></i></button>
+        <button class="lb-nav lb-prev" id="lbPrevBtn" type="button" aria-label="Previous image"><i class="fas fa-chevron-left"></i></button>
+        <button class="lb-nav lb-next" id="lbNextBtn" type="button" aria-label="Next image"><i class="fas fa-chevron-right"></i></button>
         <div class="lb-inner">
             <img id="lbImg" src="" alt="Gallery image">
         </div>
@@ -364,14 +364,14 @@
         if (e.key === 'ArrowLeft')  lbNav(-1);
     });
 
-    // ── Gallery Filter ──
-    function filterGallery(type, btn) {
-        document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
-        btn.classList.add('active');
-        // Both filters show all images for now — can be extended
-        document.querySelectorAll('.gallery-item').forEach(item => {
-            item.style.display = '';
-            item.style.animation = 'fadeInUp 0.4s ease both';
-        });
-    }
+    // Wire up lightbox controls safely with addEventListener
+    const lbClose = document.getElementById('lbCloseBtn');
+    const lbPrev = document.getElementById('lbPrevBtn');
+    const lbNext = document.getElementById('lbNextBtn');
+    const lb = document.getElementById('lightbox');
+
+    if (lbClose) lbClose.addEventListener('click', closeLightbox);
+    if (lbPrev) lbPrev.addEventListener('click', (e) => { e.stopPropagation(); lbNav(-1); });
+    if (lbNext) lbNext.addEventListener('click', (e) => { e.stopPropagation(); lbNav(1); });
+    if (lb) lb.addEventListener('click', closeLightboxOnBg);
 </script>
