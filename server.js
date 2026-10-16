@@ -511,26 +511,32 @@ app.get(['/gallery', '/gallery.html'], (req, res) => {
   res.set('Cache-Control', 'no-store, no-cache, must-revalidate, proxy-revalidate');
 
   const groups = getCachedGroups('image');
+  // For the public website, only show categorized sections (exclude uncategorized)
   const sections = Object.keys(groups)
-    .filter(name => groups[name].length > 0)
-    .sort((a, b) => {
-      if (a === DEFAULT_SECTION) return 1;
-      if (b === DEFAULT_SECTION) return -1;
-      return a.localeCompare(b);
-    })
+    .filter(name => name !== DEFAULT_SECTION && groups[name].length > 0)
+    .sort((a, b) => a.localeCompare(b))
     .map(name => ({ name, count: groups[name].length }));
 
   const requested = slugify(req.query.section);
-  const activeSection = groups[requested] ? requested : '';   // '' = all
+  // Do not allow viewing uncategorized images on the public website
+  const activeSection = (requested && requested !== DEFAULT_SECTION && groups[requested]) ? requested : '';   // '' = all
 
-  const allRawImages = Object.values(groups).flat();
+  // Collect images from public categories only (exclude uncategorized)
+  const visibleGroups = Object.keys(groups)
+    .filter(name => name !== DEFAULT_SECTION)
+    .reduce((acc, name) => {
+      acc[name] = groups[name];
+      return acc;
+    }, {});
+
+  const allRawImages = Object.values(visibleGroups).flat();
   const totalImages = allRawImages.length;
 
   let allFilteredImages;
   if (activeSection) {
     allFilteredImages = groups[activeSection] || [];
   } else {
-    // When "All" is active, randomize images across all categories
+    // When "All" is active, randomize images across all public categories (excluding uncategorized)
     const isNewAllClick = !req.query.page;
     const sessionShuffle = req.session && req.session.galleryShuffle;
 

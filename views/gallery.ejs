@@ -199,9 +199,11 @@
             All (<%= typeof totalImages !== 'undefined' ? totalImages : (images ? images.length : 0) %>)
         </a>
         <% sections.forEach(function(cat) { %>
+        <% if (cat.name !== 'uncategorized') { %>
         <a href="/gallery?section=<%= cat.name %>" class="filter-btn <%= activeSection === cat.name ? 'active' : '' %>">
             <%= cat.name.replace(/-/g, ' ') %> (<%= cat.count %>)
         </a>
+        <% } %>
         <% }); %>
     </div>
     <% } %>
