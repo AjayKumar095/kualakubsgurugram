@@ -1,18 +1,15 @@
-<!-- Modal -->
 <div class="modal fade" id="enquireModel" tabindex="-1" aria-labelledby="enquireModalLabel" aria-hidden="true">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h1 class="modal-title fs-5" id="enquireModalLabel"><span
-                        class="me-2 bi bi-exclamation-circle-fill"></span> Enquiry Form</h1>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <div class="modal-body">
-                <iframe class="py-2"
-                    src="https://form.edmissioncrm.com/form-preview/d37ec879-7e06-4e79-aa62-7fb0a98a55e9" width="100%"
-                    height="500" style="border:none; border-radius:8px;" loading="lazy"></iframe>
-            </div>
-
-        </div>
+  <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
+    <div class="modal-content border-0 shadow-lg">
+      <div class="modal-header bg-primary text-white">
+        <h1 class="modal-title fs-5" id="enquireModalLabel">
+          <i class="fa fa-pen-alt me-2"></i>Admission Enquiry
+        </h1>
+        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body p-4">
+        <%- include('googleSheetForm', { formId: 'modal', source: 'Enquiry Modal' }) %>
+      </div>
     </div>
+  </div>
 </div>

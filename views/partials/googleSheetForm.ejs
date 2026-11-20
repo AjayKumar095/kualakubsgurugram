@@ -1,0 +1,97 @@
+<%
+  var fid = (typeof formId !== 'undefined' && formId) ? formId : 'enquiry';
+  var src = (typeof source !== 'undefined' && source) ? source : 'Website';
+%>
+<form class="enquiry-form" data-enquiry-form data-source="<%= src %>" novalidate>
+  <p class="text-muted small mb-4">
+    Fill in the details below and our admissions team will get back to you shortly.
+  </p>
+
+  <div class="row g-3">
+    <!-- Child name -->
+    <div class="col-12 col-sm-6">
+      <div class="mb-1">
+        <label for="<%= fid %>-child" class="form-label fw-semibold small">
+          Child's Name <span class="text-danger">*</span>
+        </label>
+        <div class="input-group">
+          <span class="input-group-text bg-white text-primary"><i class="fa fa-child"></i></span>
+          <input type="text" class="form-control" id="<%= fid %>-child" name="child_name"
+                 placeholder="Child's name" maxlength="80" autocomplete="off" required>
+        </div>
+        <div class="invalid-feedback">Please enter the child's name.</div>
+      </div>
+    </div>
+
+    <!-- Father name -->
+    <div class="col-12 col-sm-6">
+      <div class="mb-1">
+        <label for="<%= fid %>-father" class="form-label fw-semibold small">
+          Father's Name <span class="text-danger">*</span>
+        </label>
+        <div class="input-group">
+          <span class="input-group-text bg-white text-primary"><i class="fa fa-user"></i></span>
+          <input type="text" class="form-control" id="<%= fid %>-father" name="father_name"
+                 placeholder="Father's name" maxlength="80" autocomplete="off" required>
+        </div>
+        <div class="invalid-feedback">Please enter the father's name.</div>
+      </div>
+    </div>
+
+    <!-- Mobile (flag dropdown is added by JS, so no input-group here) -->
+    <div class="col-12">
+      <div class="mb-1">
+        <label for="<%= fid %>-mobile" class="form-label fw-semibold small">
+          Mobile Number <span class="text-danger">*</span>
+        </label>
+        <input type="tel" class="form-control" id="<%= fid %>-mobile" name="mobile"
+               placeholder="98765 43210" autocomplete="tel" required>
+        <div class="invalid-feedback">Please enter a valid mobile number.</div>
+      </div>
+    </div>
+
+    <!-- Email -->
+    <div class="col-12">
+      <div class="mb-1">
+        <label for="<%= fid %>-email" class="form-label fw-semibold small">
+          Email <span class="text-muted fw-normal">(optional)</span>
+        </label>
+        <div class="input-group">
+          <span class="input-group-text bg-white text-primary"><i class="fa fa-envelope"></i></span>
+          <input type="email" class="form-control" id="<%= fid %>-email" name="email"
+                 placeholder="name@example.com" maxlength="120" autocomplete="email">
+        </div>
+        <div class="invalid-feedback">Please enter a valid email address.</div>
+      </div>
+    </div>
+
+    <!-- Class -->
+    <div class="col-12">
+      <div class="mb-1">
+        <label for="<%= fid %>-class" class="form-label fw-semibold small">
+          Class Applying For
+        </label>
+        <div class="input-group">
+          <span class="input-group-text bg-white text-primary"><i class="fa fa-graduation-cap"></i></span>
+          <select class="form-select" id="<%= fid %>-class" name="class">
+            <option value="">Select Class</option>
+            <option value="Seedling (Pre Nursery)">Seedling (Pre Nursery)</option>
+            <option value="Budding (Nursery)">Budding (Nursery)</option>
+            <option value="Blooming (KG)">Blooming (KG)</option>
+            <option value="Exceeding (UKG)">Exceeding (UKG)</option>
+          </select>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Honeypot -->
+  <div style="position:absolute;left:-9999px;" aria-hidden="true">
+    <input type="text" name="website" tabindex="-1" autocomplete="off">
+  </div>
+
+  <button type="submit" class="btn btn-primary btn-lg w-100 mt-4 enquiry-submit">
+    <i class="fa fa-paper-plane me-2"></i>Submit Enquiry
+  </button>
+  <div class="enquiry-status mt-3" role="alert" aria-live="polite"></div>
+</form>

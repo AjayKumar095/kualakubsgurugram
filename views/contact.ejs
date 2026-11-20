@@ -100,47 +100,14 @@
                         </form>
                     </div> -->
                     <div class="col-lg-6 col-md-12">
-                        <form id="contact-form">
-                            <div class="row g-3">
-                                <div class="col-md-6">
-                                    <div class="form-floating">
-                                        <!-- Added name="name" -->
-                                        <input type="text" class="form-control" id="name" name="name"
-                                            placeholder="Your Name" required>
-                                        <label for="name">Your Name</label>
-                                    </div>
-                                </div>
-                                <div class="col-md-6">
-                                    <div class="form-floating">
-                                        <!-- Added name="email" -->
-                                        <input type="email" class="form-control" id="email" name="email"
-                                            placeholder="Your Email" required>
-                                        <label for="email">Your Email</label>
-                                    </div>
-                                </div>
-                                <div class="col-12">
-                                    <div class="form-floating">
-                                        <!-- Added name="subject" -->
-                                        <input type="text" class="form-control" id="subject" name="subject"
-                                            placeholder="Subject">
-                                        <label for="subject">Subject</label>
-                                    </div>
-                                </div>
-                                <div class="col-12">
-                                    <div class="form-floating">
-                                        <!-- Added name="message" -->
-                                        <textarea class="form-control" placeholder="Leave a message here" id="message"
-                                            name="message" style="height:150px"></textarea>
-                                        <label for="message">Message</label>
-                                    </div>
-                                </div>
-                                <div class="col-12">
-                                    <button class="btn btn-primary w-100 py-3" id="submit-btn" type="submit">Send
-                                        Message</button>
-                                </div>
+                        <div class="card border-0 shadow-sm rounded-3">
+                            <div class="card-body p-4">
+                                <h5 class="text-primary mb-3">Send an Enquiry</h5>
+                                <%- include('partials/googleSheetForm', { formId: 'contact' , source: 'Contact Page' }) %>
                             </div>
-                        </form>
+                        </div>
                     </div>
+
                     <script>
                         const scriptURL = 'https://script.google.com/macros/s/AKfycbyMEafuYXPJFzzb6I5tewPFIarb2-jrWjmLFZBkRl4JH6nsnK9W8chSUEkJurvGrH3p/exec'; // Paste your deployed Google Apps Script URL here
                         const form = document.getElementById('contact-form');
