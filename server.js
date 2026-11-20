@@ -9,18 +9,18 @@
 
 require('dotenv').config();
 
-const express     = require('express');
-const path        = require('path');
-const fs          = require('fs');
-const multer      = require('multer');
-const session     = require('express-session');
-const flash       = require('connect-flash');
-const helmet      = require('helmet');
+const express = require('express');
+const path = require('path');
+const fs = require('fs');
+const multer = require('multer');
+const session = require('express-session');
+const flash = require('connect-flash');
+const helmet = require('helmet');
 const compression = require('compression');
-const morgan      = require('morgan');
-const sharp       = require('sharp');          // npm i sharp
+const morgan = require('morgan');
+const sharp = require('sharp');          // npm i sharp
 
-const app  = express();
+const app = express();
 const PORT = process.env.PORT || 3000;
 
 // ─── Trust Proxy (Required for secure sessions behind reverse proxies) ────────
@@ -43,7 +43,12 @@ app.use(helmet({
       imgSrc: ["'self'", "data:", "*"],
       mediaSrc: ["'self'"],
       frameSrc: ["'self'", "https://www.google.com", "https://form.edmissioncrm.com"],
-      connectSrc: ["'self'", "https://eflow.kualakubsgurugram.in"],
+      connectSrc: [
+        "'self'",
+        "https://eflow.kualakubsgurugram.in",
+        "https://script.google.com",
+        "https://script.googleusercontent.com"
+      ],
     },
   },
 }));
@@ -81,7 +86,7 @@ app.use(express.static(path.join(__dirname), { index: false, ...staticOptions })
 // ─── Directories ─────────────────────────────────────────────────────────────
 const IMAGES_DIR = path.join(__dirname, 'assests', 'uploads', 'images');
 const VIDEOS_DIR = path.join(__dirname, 'assests', 'uploads', 'videos');
-const DATA_DIR   = path.join(__dirname, 'data');
+const DATA_DIR = path.join(__dirname, 'data');
 [IMAGES_DIR, VIDEOS_DIR, DATA_DIR].forEach(d => { if (!fs.existsSync(d)) fs.mkdirSync(d, { recursive: true }); });
 
 const IMAGES_JSON = path.join(DATA_DIR, 'images.json');
@@ -129,8 +134,8 @@ function requireAuth(req, res, next) {
 const imageStorage = multer.memoryStorage();
 
 const MAX_IMAGE_BYTES = 200 * 1024;     // 200 KB target
-const IMAGE_QUALITY   = 80;             // 80 % quality
-const SIZE_STEPS      = [1920, 1600, 1280, 1024, 800, 640];   // max widths to try, in order
+const IMAGE_QUALITY = 80;             // 80 % quality
+const SIZE_STEPS = [1920, 1600, 1280, 1024, 800, 640];   // max widths to try, in order
 
 /**
  * Compress one uploaded image to WebP at quality 80.
@@ -180,7 +185,7 @@ const uploadImage = multer({
 // ─── Multer — Video Storage (max 50 MB) ──────────────────────────────────────
 const videoStorage = multer.diskStorage({
   destination: (req, file, cb) => cb(null, VIDEOS_DIR),
-  filename:    (req, file, cb) => {
+  filename: (req, file, cb) => {
     const base = file.originalname.replace(/\s+/g, '-').replace(/[^a-zA-Z0-9.\-_]/g, '');
     const unique = Date.now() + '-' + base;
     cb(null, unique);
@@ -286,17 +291,17 @@ function fileExistsForUrl(u) {
     if (cleanUrl.startsWith('/public/')) {
       const relPath = cleanUrl.replace(/^\/public\//, '');
       return fs.existsSync(path.join(__dirname, 'public', relPath)) ||
-             fs.existsSync(path.join(__dirname, 'public', decodeURIComponent(relPath)));
+        fs.existsSync(path.join(__dirname, 'public', decodeURIComponent(relPath)));
     }
     if (cleanUrl.startsWith('/assests/uploads/images/')) {
       const filename = path.basename(cleanUrl);
       return fs.existsSync(path.join(IMAGES_DIR, filename)) ||
-             fs.existsSync(path.join(IMAGES_DIR, decodeURIComponent(filename)));
+        fs.existsSync(path.join(IMAGES_DIR, decodeURIComponent(filename)));
     }
     if (cleanUrl.startsWith('/assests/uploads/videos/')) {
       const filename = path.basename(cleanUrl);
       return fs.existsSync(path.join(VIDEOS_DIR, filename)) ||
-             fs.existsSync(path.join(VIDEOS_DIR, decodeURIComponent(filename)));
+        fs.existsSync(path.join(VIDEOS_DIR, decodeURIComponent(filename)));
     }
   } catch {
     return false;
@@ -439,24 +444,24 @@ function addToSection(type, section, urls) {
 // ─── Shared Site Data ─────────────────────────────────────────────────────────
 const siteData = {
   siteName: 'Kualakubsgurugram',
-  tagline:  'The Best Online Learning Platform',
+  tagline: 'The Best Online Learning Platform',
   nav: [
-    { label: 'Home',     href: '/' },
-    { label: 'About',    href: '/about' },
-    { label: 'Courses',  href: '/courses' },
+    { label: 'Home', href: '/' },
+    { label: 'About', href: '/about' },
+    { label: 'Courses', href: '/courses' },
     { label: 'Our Team', href: '/team' },
     { label: 'Testimonial', href: '/testimonial' },
-    { label: 'Contact',  href: '/contact' },
+    { label: 'Contact', href: '/contact' },
   ],
   contact: {
     address: 'Microtek Greenburg Society, Sector 86, Gurugram',
-    phone:   '+91-880-010-5105',
-    email:   'info@kualakubsgurugram.in',
+    phone: '+91-880-010-5105',
+    email: 'info@kualakubsgurugram.in',
   },
   social: {
     instagram: 'https://www.instagram.com/p/C-VBXdBP151/?igsh=c2ZvdWRicjJ5aGs4',
-    facebook:  'https://www.facebook.com/people/Kualakubs-Gurugram/61555222509045/?mibextid=LQQJ4d',
-    whatsapp:  'https://web.whatsapp.com/send?phone=918800105105',
+    facebook: 'https://www.facebook.com/people/Kualakubs-Gurugram/61555222509045/?mibextid=LQQJ4d',
+    whatsapp: 'https://web.whatsapp.com/send?phone=918800105105',
   },
 };
 
@@ -587,17 +592,17 @@ app.get('/admin/login', (req, res) => {
   if (req.session.isAdmin) return res.redirect('/admin');
   res.render('admin/login', {
     pageTitle: 'Admin Login',
-    siteName:  siteData.siteName,
-    error:     req.flash('error'),
-    success:   req.flash('success'),
+    siteName: siteData.siteName,
+    error: req.flash('error'),
+    success: req.flash('success'),
   });
 });
 
 app.post('/admin/login', (req, res) => {
   const { username, password } = req.body;
   if (username === ADMIN_USER && password === ADMIN_PASS) {
-    req.session.isAdmin    = true;
-    req.session.loginTime  = new Date().toISOString();
+    req.session.isAdmin = true;
+    req.session.loginTime = new Date().toISOString();
     return res.redirect('/admin');
   }
   req.flash('error', 'Invalid username or password.');
@@ -616,24 +621,24 @@ app.get('/admin', requireAuth, (req, res) => {
   const videos = Object.values(videoGroups).flat();
 
   res.render('admin/dashboard', {
-    pageTitle:  'Admin Dashboard',
-    siteName:   siteData.siteName,
+    pageTitle: 'Admin Dashboard',
+    siteName: siteData.siteName,
     images,
     videos,
     imageGroups,                       // { section: [{filename,url}] }
     videoGroups,
     imageSections: Object.keys(imageGroups),   // for the <select>
     videoSections: Object.keys(videoGroups),
-    success:    req.flash('success'),
-    error:      req.flash('error'),
-    loginTime:  req.session.loginTime,
+    success: req.flash('success'),
+    error: req.flash('error'),
+    loginTime: req.session.loginTime,
   });
 });
 
 // ─── Admin — Create an empty section ──────────────────────────────────────────
 app.post('/admin/section/create', requireAuth, (req, res) => {
   const type = req.body.type === 'video' ? 'video' : 'image';
-  const cfg  = MEDIA[type];
+  const cfg = MEDIA[type];
   const name = slugify(req.body.name);
 
   if (!name) {
@@ -654,7 +659,7 @@ app.post('/admin/section/create', requireAuth, (req, res) => {
 // ─── Admin — Delete a section (files are kept, moved to "uncategorized") ──────
 app.post('/admin/section/delete', requireAuth, (req, res) => {
   const type = req.body.type === 'video' ? 'video' : 'image';
-  const cfg  = MEDIA[type];
+  const cfg = MEDIA[type];
   const name = slugify(req.body.name);
   const groups = syncGroups(type);
 
@@ -775,7 +780,7 @@ app.post('/admin/video/testimonial', requireAuth, (req, res) => {
 // ─── Admin — Move files to another section ────────────────────────────────────
 app.post('/admin/move', requireAuth, (req, res) => {
   const type = req.body.type === 'video' ? 'video' : 'image';
-  const cfg  = MEDIA[type];
+  const cfg = MEDIA[type];
   const target = resolveSection({ new_section: req.body.new_section, section: req.body.target });
   const raw = req.body.files;
   const names = (Array.isArray(raw) ? raw : [raw]).filter(Boolean).map(n => path.basename(n));
@@ -802,11 +807,11 @@ app.post('/admin/delete', requireAuth, (req, res) => {
     req.flash('error', 'Invalid media type.');
     return res.redirect('/admin');
   }
-  const cfg   = MEDIA[type];
-  const raw   = req.body.files;
+  const cfg = MEDIA[type];
+  const raw = req.body.files;
   const names = (Array.isArray(raw) ? raw : [raw]).filter(Boolean);
   let deleted = 0;
-  let errors  = 0;
+  let errors = 0;
 
   names.forEach(name => {
     const safe = path.basename(name);          // strip path traversal
